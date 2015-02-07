@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+    <title>Lektionsutvärdering och statistik för skolklasser - Utvärdering</title>
+    <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- own css -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body> 
+
+	<div class="container theme-showcase" role="main">
+
+		<!--
+		<div id="meny">
+			<a class="btn btn-lg btn-link" href="index.html">Start</a>
+		</div>
+		-->
+
+		<!-- the klass and mal variables are printed out here after they are fetched from the URL -->
+		
+		<h2>Klass: <span id="klass-from-url"></span></h2>
+		<h1>Lektion: <span id="mal-from-url"></span></h1>
+		<h2>Hur bra tycker du att du har lärt dig lektions mål idag på en skala från 1-5? <span id="thanks"></span></h2> 
+		    
+
+		<div class="buttons">
+			<div id="signal-5" class="signal-circle type-5"><h3 class="heading heading-small">Mycket bra (5)</h3></div>
+			<div id="signal-4" class="signal-circle type-4"><h3 class="heading heading-small">Ganska bra (4)</h3></div>
+			<div id="signal-3" class="signal-circle type-3"><h3 class="heading heading-small">Medel (3)</h3></div>
+			<div id="signal-2" class="signal-circle type-2"><h3 class="heading heading-small">Ganska dåligt (2)</h3></div>
+			<div id="signal-1" class="signal-circle type-1"><h3 class="heading heading-small">Mycket dåligt (1)</h3></div>
+		</div>
+
+		<!-- the hidden form that are used to post the evauation -->
+		<form id="input-form" action="" method="POST" target="no-target">
+			<input id="skola" placeholder="Skola" name="skola" value="SK" type="hidden">
+			<input id="amne" placeholder="Ämne" name="amne" value="TS" type="hidden">
+			<input id="larare" placeholder="Lärare" name="larare" value="TS" type="hidden">
+			<input id="klass" placeholder="Klass" name="klass" type="hidden">
+			<input id="mal" placeholder="Mål med lektion" name="mal" type="hidden">
+			<input id="utvardering" placeholder="Utvärdering av lektion" name="utvardering" type="hidden">
+			<button id="form-submit" style="visibility: hidden" type="submit"></button>
+		</form>
+
+	</div>
+
+	<iframe src="#" id="no-target" name="no-target" style="visibility:hidden"></iframe>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+		(function(){
+    		'use strict';
+
+    			// gets the URL-parameters
+				function getURLParam (oTarget, sVar) {
+				  return decodeURI(oTarget.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(sVar).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+				}
+
+				// gets the values for klass and mal and replaces the + in the URL with blank spaces
+				var re = /[+]/gi;
+				var klassString = getURLParam(window.location, "klass").replace(re, ' ');
+				var malString = getURLParam(window.location, "mal").replace(re, ' ');
+
+				// prints out the klass and mal from the URL on the page
+				document.getElementById('klass-from-url').innerHTML = klassString;
+				document.getElementById('mal-from-url').innerHTML = malString;
+
+				// sets the values from the URL to the form input fields
+				document.getElementById('klass').value = klassString;
+				document.getElementById('mal').value = malString;
+
+				// sends the valuation 
+				var submitEvalutation = function (value) {
+					document.getElementById('signal-' + value).style.backgroundColor = "grey"; // sets the signal to grey
+					document.getElementById('utvardering').value = value; // sets the value to the corresponding signal
+					document.getElementById('form-submit').click(); //on click sumbit the form
+					document.getElementById('utvardering').value = ""; // resets the value
+					document.getElementById('thanks').innerHTML = "Tack!";
+					window.setTimeout(reloadPage, 1000); // reloads the page after 1 second
+				};
+
+				// the function that reloads the page. This clears the cache.
+				var reloadPage = function(){
+					document.location.reload(false);
+				};
+
+				// sets the post query and sends it to the Google Docs on submit
+			    $('#input-form').one('submit',function(){
+			        var idSkola = "entry.1597234779=";
+			        var inputSkola = encodeURIComponent($('#skola').val());
+			        var idAmne = "entry_463573764=";
+			        var inputAmne = encodeURIComponent($('#amne').val());
+			        var idLarare = "entry_1557751062=";
+			        var inputLarare = encodeURIComponent($('#larare').val());
+			        var idKlass = "entry_1276656198=";
+			        var inputKlass = encodeURIComponent($('#klass').val());
+			        var idMal = "entry_331875402=";
+			        var inputMal = encodeURIComponent($('#mal').val());
+			        var idUtvardering = "entry_1135674495=";
+			        var inputUtvardering = encodeURIComponent($('#utvardering').val());
+			        var baseURL = 'https://docs.google.com/forms/d/1oTJ3GjrawWl8RWhv4Lb43lMhyWNQnfBHTaq2Sf2eR6U/formResponse?';
+			        var submitRef = '&submit=Submit';
+			        var submitURL = (baseURL + idSkola + inputSkola +"&" + idAmne + inputAmne + "&" + idLarare + inputLarare +"&" + idKlass + inputKlass + "&" + idMal + inputMal +"&" + idUtvardering + inputUtvardering + submitRef);
+			        console.log(submitURL);
+			        $(this)[0].action=submitURL;
+
+			    });
+				
+				// puts the click eventlistener on the signals and sends it to the sumbitEvaluation function
+				document.getElementById('signal-1').addEventListener ("click", function() { submitEvalutation(1);});
+				document.getElementById('signal-2').addEventListener ("click", function() { submitEvalutation(2);});
+				document.getElementById('signal-3').addEventListener ("click", function() { submitEvalutation(3);});
+				document.getElementById('signal-4').addEventListener ("click", function() { submitEvalutation(4);});
+				document.getElementById('signal-5').addEventListener ("click", function() { submitEvalutation(5);});
+		})();
+
+	</script>
+
+</body>
+</html>

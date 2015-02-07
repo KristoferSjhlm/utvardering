@@ -1,0 +1,83 @@
+	h1 {
+		padding-top: 0px;
+		font-size: 2em;
+	}
+	h2 {
+		padding-top: 0px;
+		font-size: 1.4em;
+	}
+	h3 {
+		padding-top: 48px;
+		font-size: 1.3em;
+	}
+
+	
+	.buttons{
+		position: absolute;
+	}
+	
+	.signal-circle {
+		border-radius: 50%;
+		width: 160px;
+		height: 160px; 
+		text-align: center;
+	}	
+
+	.type-1 {
+		background-color: #cc0022;
+		position: absolute;
+		left: 0px;
+		top: 10px;
+	}
+
+	.type-2 {
+		background-color: #e64b17;
+		position: absolute;
+		left: 170px;
+		top: 10px;
+	}
+
+	.type-3 {
+		background-color: #ffaf15;
+		position: absolute;
+		left: 340px;
+		top: 10px;
+	}
+
+	.type-4 {
+		background-color: #8fbf00;
+		position: absolute;
+		left: 510px;
+		top: 10px;
+	}
+
+	.type-5 {
+		background-color: #4baf12;
+		position: absolute;
+		left: 680px;
+		top: 10px;
+	}
+
+
+	/* start classes for the reusable d3 barchart*/
+
+    .Barchart .label {
+      font-size: 13px; 
+    }
+    .Barchart .ylabels .tick line {
+      fill: none;
+      stroke: #222;
+      stroke-width: 1px;
+      shape-rendering: crispEdges;
+    }
+    .Barchart path.domain {
+      fill: none;
+      stroke: #222;
+      stroke-width: 1px;
+      shape-rendering: crispEdges;
+    }
+    .Barchart .bars rect.bar {
+      fill: #4baf12;
+    }
+
+    /* start classes for the reusable d3 barchart*/
