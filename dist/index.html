@@ -26,18 +26,22 @@
 
     <h1>Lektionsutvärdering</h1>
   	
-  	<form method="get" action="evaluation.html">
+  	<form method="get" action="evaluation.html" target="_blank">
            
-        <div id="klassinput"></div>
+        <p><span id="klassinput"></span>
         <!--<p><strong>Ange klass: </strong> <select name='klass' id='klass'></select></p>
   	    <p><label>Ange klass <input id="klass" placeholder="Klass" name="klass"></label></p>-->
-        <p id="nyklass">Ny klass</p>
+        </p>
 
-        <div id="malinput"></div>
+        <p><div id="malinput"></div>
         <!--<p><strong>Välj lektionsmål: </strong> <select name="mal" id="mal"></select></p>
   	    <p><label>Mål med lektionen <input id="mal" placeholder="Lektionsmål" name="mal" required></label></p>-->
-        <p id="nyttmal">Nytt lektionsmål</p>
+        </p>
+
   	    <p><input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering"></p>
+
+        <!--<a href="#" id="test">Tillbaka</a>-->
+
   	</form>
 
   	<h2>Grafik över tidigare utvärderingar</h2>
@@ -46,6 +50,8 @@
         <p><strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select></p>
         <p><input type="submit" class="btn btn-primary" value="Kolla in statistik för klassen"></p>
     </form>
+
+    <a href='#' id='test'>Ladda om sidan/Börja om från början</a>
 
   </div>
 
@@ -116,7 +122,7 @@
               }
 
 
-              document.getElementById('klassinput').innerHTML = "<p><strong>Ange klass: </strong> <select name='klass' id='klass'></select></p>"
+              document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>"
               document.getElementById('klass').innerHTML = selectHTML;
               document.getElementById('selectKlassStats').innerHTML = selectHTML;
 
@@ -142,31 +148,29 @@
                   selectLessongoalsHTML = selectLessongoalsHTML + '<option value="' + lessongoals.column('Lektionsmal').data[j] + '">' + lessongoals.column('Lektionsmal').data[j] + '</option>';
               }
 
-              document.getElementById('malinput').innerHTML = "<p><strong>Välj lektionsmål: </strong> <select name='mal' id='mal'></select></p>"
+              document.getElementById('malinput').innerHTML = "<strong>Välj lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'>Ange ett nytt lektionsmål</a>"
               document.getElementById('mal').innerHTML = selectLessongoalsHTML;
               
 
-              
+              // on click show input form for new class
               document.getElementById("nyklass").addEventListener("click", function( event ) {
-                // display the current click count inside the clicked div
-                document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass' name='klass'></label>" 
+                document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
               }, false);
+
               
-
+              // on click show input form for new lessongoal
               document.getElementById("nyttmal").addEventListener("click", function( event ) {
-                // display the current click count inside the clicked div
-                document.getElementById("malinput").innerHTML = "<p><label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label></p>" 
+                document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
               }, false);
 
-              /*
-              document.getElementById("gammal").addEventListener("click", function( event ) {
-                // display the current click count inside the clicked div
-                event.target.innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select></div>" 
-                document.getElementById('klassinput').innerHTML = " "
-                document.getElementById('klass').innerHTML = selectHTML;
-              }, false);
-              */
+              var reloadPage = function(){
+                document.location.reload(false);
+              };
 
+              document.getElementById("test").addEventListener("click", function( event ) {
+                // display the current click count inside the clicked div
+                document.location.reload(false);
+              }, false);
 
           });
 
