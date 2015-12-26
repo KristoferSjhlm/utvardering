@@ -121,7 +121,7 @@
 
 
             // filter the data on the Epost parameter
-            var className = this.where({
+            var nameDetails = this.where({
                 // copy over the data for this columns
                 columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet'],
                 // and only where the values are > 1
@@ -132,8 +132,8 @@
                 
             });
 
-            console.log(className.column('Namn').data[0]);
-            console.log(className.column('idSpreadsheet').data[0]);
+            console.log(nameDetails.column('Namn').data[0]);
+            console.log(nameDetails.column('idSpreadsheet').data[0]);
             //classes.column('Klass').data[i]
             /*
 
