@@ -44,7 +44,7 @@
 			<div id="signal-1" class="signal-circle type-1"><h3 class="heading heading-small">Mycket dåligt (1)</h3></div>
 		</div>
 
-		<!-- the hidden form that are used to post the evauation -->
+		<!-- the hidden form that are used to post the evaluation -->
 		<form id="input-form" action="" method="POST" target="no-target">
 			<input id="skola" placeholder="Skola" name="skola" value="SK" type="hidden">
 			<input id="amne" placeholder="Ämne" name="amne" value="TS" type="hidden">
@@ -103,7 +103,7 @@
 
 				// sets the post query and sends it to the Google Docs on submit
 			    $('#input-form').one('submit',function(){
-			        var idSkola = "entry.1597234779=";
+			        var idSkola = "entry_1597234779=";
 			        var inputSkola = encodeURIComponent($('#skola').val());
 			        var idAmne = "entry_463573764=";
 			        var inputAmne = encodeURIComponent($('#amne').val());

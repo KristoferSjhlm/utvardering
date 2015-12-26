@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Lektionsutvärdering och statistik för skolklasser</title>
+    <title>Lektionsmål inlogg</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,26 +23,41 @@
 <body> 
 
 
+
+
+
   <div class="container theme-showcase" role="main">
 
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </form>
 
+<!--
     <h1>Lektionsutvärdering</h1>
   	
   	<form method="get" action="evaluation.html" target="_blank">
            
         <p><span id="klassinput"></span>
-        <!--<p><strong>Ange klass: </strong> <select name='klass' id='klass'></select></p>
-  	    <p><label>Ange klass <input id="klass" placeholder="Klass" name="klass"></label></p>-->
+
         </p>
 
         <p><div id="malinput"></div>
-        <!--<p><strong>Välj lektionsmål: </strong> <select name="mal" id="mal"></select></p>
-  	    <p><label>Mål med lektionen <input id="mal" placeholder="Lektionsmål" name="mal" required></label></p>-->
+
         </p>
 
   	    <p><input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering"></p>
 
-        <!--<a href="#" id="test">Tillbaka</a>-->
+
 
   	</form>
 
@@ -57,7 +72,7 @@
 
   </div>
 
- 
+ -->
 
 	<!-- load libraries in cache that are used on other pages -->
 
@@ -77,15 +92,16 @@
     (function(){
         'use strict';
 
+          var epost = "tomas.sjoholm@soderhamn.se"
           // starttext for selectbox
-          var selectHTML = '<option value="Välj">Välj klass</option>';
-          var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
+          //var selectHTML = '<option value="Välj">Välj klass</option>';
+          //var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
 
           //connect to Google Spreadsheet
           var ds = new Miso.Dataset({
               importer : Miso.Dataset.Importers.GoogleSpreadsheet,
               parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
-              key : "11lD3mj-ajKuJyssfN1_dW1ZJoato2X8bzqvilI1e_CE",
+              key : "1q4jt7ZPkjUDwygHr4_y7PogVgVroBdmUR3OSI0TLaWg",
               worksheet : "1"
           });
 
@@ -99,8 +115,27 @@
               }
           });
 
+          
           // this function could be used if something need to be done after ds.fetch is done)
           _.when(ds.fetch()).then(function() {
+
+
+            // filter the data on the Epost parameter
+            var className = this.where({
+                // copy over the data for this columns
+                columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet'],
+                // and only where the values are > 1
+                rows: function(row) {
+                    return row.Epost == epost
+                    //return row.Klass == classes.column('Klass').data[i];
+                }
+                
+            });
+
+            console.log(className.column('Namn').data[0]);
+            console.log(className.column('idSpreadsheet').data[0]);
+            //classes.column('Klass').data[i]
+            /*
 
               //Get the different classes and sort by the variabel Klass
               var classes = ds.countBy('Klass');
@@ -173,8 +208,10 @@
                 // display the current click count inside the clicked div
                 document.location.reload(false);
               }, false);
-
+            
+            */
           });
+          
 
       })();
 
