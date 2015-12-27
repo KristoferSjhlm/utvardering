@@ -26,7 +26,7 @@
 
 
 
-  <div class="container theme-showcase" role="main">
+  <div id="main-content" class="container theme-showcase" role="main">
 
 
       <form class="form-signin" id="signin-form" action="" method="POST" target="no-target">
@@ -35,11 +35,13 @@
         <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <!--
         <div class="checkbox">
           <label>
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
+        -->
         <button id="form-submit" class="btn btn-primary" type="submit">Sign in</button>
       </form>
 
@@ -69,11 +71,12 @@
         <p><input type="submit" class="btn btn-primary" value="Kolla in statistik för klassen"></p>
     </form>
 
-    <a href='#' id='test'>Ladda om sidan/Börja om från början</a>
+    <a href="#"" id="test">Ladda om sidan/Börja om från början</a>
 
+-->
   </div>
 
- -->
+ 
 
 	<!-- load libraries in cache that are used on other pages -->
 
@@ -141,6 +144,7 @@
                 if (nameDetails.column('Epost').data[0] ==  inputEmail && nameDetails.column('Password').data[0] ==  inputPassword) {
 
                     alert("Rätt")
+                    document.getElementById('main-content').innerHTML = startHTML;
 
                 } else {
 
@@ -152,7 +156,22 @@
 
             // filter the data on the Epost parameter
             
-
+            let startHTML = '<h1>Lektionsutvärdering</h1> \
+                \
+                <form method="get" action="evaluation.html" target="_blank">\
+                    <p><span id="klassinput"></span></p>\
+                    <p><div id="malinput"></div></p>\
+                    <p><input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering"></p>\
+                </form>\
+                \
+                <h2>Grafik över tidigare utvärderingar</h2>\
+                \
+                <form method="get" action="stats.html">\
+                    <p><strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select></p>\
+                    <p><input type="submit" class="btn btn-primary" value="Kolla in statistik för klassen"></p>\
+                </form>\
+                \
+                <a href="#"" id="test">Ladda om sidan/Börja om från början</a>'
 
 
 
