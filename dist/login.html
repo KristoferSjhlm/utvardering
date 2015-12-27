@@ -85,9 +85,10 @@
 
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js" charset="utf-8"></script>
-  <!--<script src="js/lib/d3.chart.js"></script>-->
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="js/lib/d3.chart.min.js"></script>
   <script src="js/lib/miso.ds.deps.js"></script>
+  <!--<script src="js/stats.js"></script>-->
 
   <!-- Script that takes out all classnames from the spreadsheet -->
 
@@ -171,7 +172,11 @@
                     <p><input type="submit" class="btn btn-primary" value="Kolla in statistik för klassen"></p>\
                 </form>\
                 \
-                <a href="#" id="test">Ladda om sidan/Börja om från början</a>'
+                <h2><span id="classes"></span></h2>\
+                <p id="selectMal"></p>\
+                <h1><span id="mal"></span></h1>\
+                <div id="bargraph"></div>\
+                <h2><span id="mean"></span></h2>'
 
 
 
@@ -280,10 +285,10 @@
                         document.location.reload(false);
                       };
 
-                      document.getElementById("test").addEventListener("click", function( event ) {
+                      //document.getElementById("test").addEventListener("click", function( event ) {
                         // display the current click count inside the clicked div
-                        document.location.reload(false);
-                      }, false);
+                      //  document.location.reload(false);
+                      //}, false);
                   });
               }
 

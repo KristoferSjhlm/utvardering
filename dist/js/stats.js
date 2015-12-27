@@ -7,7 +7,7 @@
         var classLessons = [];
         var classNameLessons = [];
         var counter = 0;
-        var selectHTML = '<option value="Välj">Välj lektion</option>';
+        var selectHTML = '<select name="select"> <option value="Välj">Välj lektion</option>';
 
         //connect to Google Spreadsheet
         var ds = new Miso.Dataset({
@@ -84,7 +84,7 @@
             }
 
             //print out the selectbox on the page
-            document.getElementById('select').innerHTML = selectHTML;
+            document.getElementById('selectMal').innerHTML = selectHTML + "</select>";
 
             // draw the Barchart and texts on the page for the chosen value
             var drawBarchart = function(chosenValue){
@@ -94,7 +94,7 @@
             };
 
             // put an eventlistener on the select-box
-            document.getElementById('select').addEventListener ("change", function() { drawBarchart(this.value);});
+            document.getElementById('selectMal').addEventListener ("change", function() { drawBarchart(this.value);});
                 
         });
         
