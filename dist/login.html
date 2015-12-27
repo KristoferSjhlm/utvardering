@@ -143,7 +143,6 @@
 
                 if (nameDetails.column('Epost').data[0] ==  inputEmail && nameDetails.column('Password').data[0] ==  inputPassword) {
 
-                    alert("Rätt")
                     document.getElementById('main-content').innerHTML = startHTML;
                     startView(nameDetails.column('idSpreadsheet').data[0]);
 
@@ -296,6 +295,7 @@
               function lessonView (idSpreadsheet) {  
 
                   document.getElementById("bargraph").innerHTML = ""
+                  document.getElementById("mean").innerHTML = ""
                   var classes;
                   var className = [];
                   var classLessons = [];
