@@ -171,7 +171,7 @@
                 \
                 <h2><span id="classes"></span></h2>\
                 <p id="selectMal"></p>\
-                <h1><span id="mal"></span></h1>\
+                <h1><span id="malTitle"></span></h1>\
                 <div id="bargraph"></div>\
                 <h2><span id="mean"></span></h2>'
 
@@ -294,6 +294,7 @@
 
               function lessonView (idSpreadsheet) {  
 
+                  document.getElementById("malTitle").innerHTML = ""
                   document.getElementById("bargraph").innerHTML = ""
                   document.getElementById("mean").innerHTML = ""
                   var classes;
@@ -384,8 +385,8 @@
 
                       // draw the Barchart and texts on the page for the chosen value
                       var drawBarchart = function(chosenValue){
-                          //alert(chosenValue);
-                          //document.getElementById('selectMal').innerHTML = classNameLessons[chosenValue].column('Lektionsmal').data[0];
+                          //alert(classNameLessons[chosenValue].column('Lektionsmal').data[0]);
+                          document.getElementById('malTitle').innerHTML = classNameLessons[chosenValue].column('Lektionsmal').data[0];
                           barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
                           document.getElementById('mean').innerHTML = "Medelvärde: " + classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1);
                       };
