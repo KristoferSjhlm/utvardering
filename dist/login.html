@@ -144,6 +144,7 @@
 
                     alert("Rätt")
                     document.getElementById('main-content').innerHTML = startHTML;
+                    startView(nameDetails.column('idSpreadsheet').data[0]);
 
                 } else {
 
@@ -170,7 +171,7 @@
                     <p><input type="submit" class="btn btn-primary" value="Kolla in statistik för klassen"></p>\
                 </form>\
                 \
-                <a href="#"" id="test">Ladda om sidan/Börja om från början</a>'
+                <a href="#" id="test">Ladda om sidan/Börja om från början</a>'
 
 
 
@@ -184,82 +185,108 @@
 
             document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
 
-            //classes.column('Klass').data[i]
-            /*
+            function startView (idSpreadsheet) {
 
-              //Get the different classes and sort by the variabel Klass
-              var classes = ds.countBy('Klass');
-              console.log("Före: " +classes.column('Klass').data);
+                  // starttext for selectbox
+                  var selectHTML = '<option value="Välj">Välj klass</option>';
+                  var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
 
-              classes.sort(function(rowA, rowB) {
-                  if (rowA.Klass > rowB.Klass) {
-                      return 1;
-                  }
-                  if (rowA.Klass < rowB.Klass) {
-                      return -1;
-                  }
-                  return 0;
-              });
+                  //connect to Google Spreadsheet
+                  var ds = new Miso.Dataset({
+                      importer : Miso.Dataset.Importers.GoogleSpreadsheet,
+                      parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
+                      key : idSpreadsheet,
+                      worksheet : "1"
+                  });
 
-              console.log("Efter: " + classes.column('Klass').data);
+                  // get the data
+                  ds.fetch({ 
+                      success : function() {
+                          console.log(ds.columnNames(), ds.columnNames().length);
+                      },
+                      error : function() {
+                          console.log("Something went wrong. Are you sure you are connected to the internet?");
+                      }
+                  });
 
-              for (var j = 0; j < classes.length; j++) {
+                  // this function could be used if something need to be done after ds.fetch is done)
+                  _.when(ds.fetch()).then(function() {
 
-                  selectHTML = selectHTML + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
+
+                      //Get the different classes and sort by the variabel Klass
+                      var classes = ds.countBy('Klass');
+                      console.log("Före: " +classes.column('Klass').data);
+
+                      classes.sort(function(rowA, rowB) {
+                          if (rowA.Klass > rowB.Klass) {
+                              return 1;
+                          }
+                          if (rowA.Klass < rowB.Klass) {
+                              return -1;
+                          }
+                          return 0;
+                      });
+
+                      console.log("Efter: " + classes.column('Klass').data);
+
+                      for (var j = 0; j < classes.length; j++) {
+
+                          selectHTML = selectHTML + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
+                      }
+
+
+                      document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>"
+                      document.getElementById('klass').innerHTML = selectHTML;
+                      document.getElementById('selectKlassStats').innerHTML = selectHTML;
+
+
+                      //Get the different lessongoals and sort by the variabel Lektionsmal
+                      var lessongoals = ds.countBy('Lektionsmal');
+                      console.log("Före: " +lessongoals.column('Lektionsmal').data);
+
+                      lessongoals.sort(function(rowA, rowB) {
+                          if (rowA.Lektionsmal > rowB.Lektionsmal) {
+                              return 1;
+                          }
+                          if (rowA.Lektionsmal < rowB.Lektionsmal) {
+                              return -1;
+                          }
+                          return 0;
+                      });
+
+                      console.log("Efter: " + lessongoals.column('Lektionsmal').data);
+
+                      for (var j = 0; j < lessongoals.length; j++) {
+
+                          selectLessongoalsHTML = selectLessongoalsHTML + '<option value="' + lessongoals.column('Lektionsmal').data[j] + '">' + lessongoals.column('Lektionsmal').data[j] + '</option>';
+                      }
+
+                      document.getElementById('malinput').innerHTML = "<strong>Välj lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'>Ange ett nytt lektionsmål</a>"
+                      document.getElementById('mal').innerHTML = selectLessongoalsHTML;
+                      
+
+                      // on click show input form for new class
+                      document.getElementById("nyklass").addEventListener("click", function( event ) {
+                        document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
+                      }, false);
+
+                      
+                      // on click show input form for new lessongoal
+                      document.getElementById("nyttmal").addEventListener("click", function( event ) {
+                        document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
+                      }, false);
+
+                      var reloadPage = function(){
+                        document.location.reload(false);
+                      };
+
+                      document.getElementById("test").addEventListener("click", function( event ) {
+                        // display the current click count inside the clicked div
+                        document.location.reload(false);
+                      }, false);
+                  });
               }
 
-
-              document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>"
-              document.getElementById('klass').innerHTML = selectHTML;
-              document.getElementById('selectKlassStats').innerHTML = selectHTML;
-
-
-              //Get the different lessongoals and sort by the variabel Lektionsmal
-              var lessongoals = ds.countBy('Lektionsmal');
-              console.log("Före: " +lessongoals.column('Lektionsmal').data);
-
-              lessongoals.sort(function(rowA, rowB) {
-                  if (rowA.Lektionsmal > rowB.Lektionsmal) {
-                      return 1;
-                  }
-                  if (rowA.Lektionsmal < rowB.Lektionsmal) {
-                      return -1;
-                  }
-                  return 0;
-              });
-
-              console.log("Efter: " + lessongoals.column('Lektionsmal').data);
-
-              for (var j = 0; j < lessongoals.length; j++) {
-
-                  selectLessongoalsHTML = selectLessongoalsHTML + '<option value="' + lessongoals.column('Lektionsmal').data[j] + '">' + lessongoals.column('Lektionsmal').data[j] + '</option>';
-              }
-
-              document.getElementById('malinput').innerHTML = "<strong>Välj lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'>Ange ett nytt lektionsmål</a>"
-              document.getElementById('mal').innerHTML = selectLessongoalsHTML;
-              
-
-              // on click show input form for new class
-              document.getElementById("nyklass").addEventListener("click", function( event ) {
-                document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
-              }, false);
-
-              
-              // on click show input form for new lessongoal
-              document.getElementById("nyttmal").addEventListener("click", function( event ) {
-                document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
-              }, false);
-
-              var reloadPage = function(){
-                document.location.reload(false);
-              };
-
-              document.getElementById("test").addEventListener("click", function( event ) {
-                // display the current click count inside the clicked div
-                document.location.reload(false);
-              }, false);
-            
-            */
           });
           
 
