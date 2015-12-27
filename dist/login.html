@@ -28,7 +28,8 @@
 
   <div class="container theme-showcase" role="main">
 
-      <form class="form-signin">
+
+      <form class="form-signin" id="signin-form" action="" method="POST" target="no-target">
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
         <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
@@ -39,7 +40,7 @@
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
-        <button class="btn btn-primary" type="submit">Sign in</button>
+        <button id="form-submit" class="btn btn-primary" type="submit">Sign in</button>
       </form>
 
 <!--
@@ -120,20 +121,51 @@
           _.when(ds.fetch()).then(function() {
 
 
-            // filter the data on the Epost parameter
-            var nameDetails = this.where({
-                // copy over the data for this columns
-                columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet'],
-                // and only where the values are > 1
-                rows: function(row) {
-                    return row.Epost == epost
-                    //return row.Klass == classes.column('Klass').data[i];
-                }
-                
-            });
+            function checkPassword() {
+                var inputEmail = document.getElementById('inputEmail').value;
+                var inputPassword = document.getElementById('inputPassword').value;
 
-            console.log(nameDetails.column('Namn').data[0]);
-            console.log(nameDetails.column('idSpreadsheet').data[0]);
+                var nameDetails = ds.where({
+                    // copy over the data for this columns
+                    columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet'],
+                    // and only where the values are > 1
+                    rows: function(row) {
+                        return row.Epost == inputEmail
+                        //return row.Klass == classes.column('Klass').data[i];
+                    }
+                    
+                });
+ 
+                //if (nameDetails.length ==  1) {
+
+                if (nameDetails.column('Epost').data[0] ==  inputEmail && nameDetails.column('Password').data[0] ==  inputPassword) {
+
+                    alert("Rätt")
+
+                } else {
+
+                    alert("Fel användarnamn eller lösenord. Försök igen.")
+
+                }
+
+            }
+
+            // filter the data on the Epost parameter
+            
+
+
+
+
+            //console.log(nameDetails.column('Namn').data[0]);
+            //console.log(nameDetails.column('Epost').data[0]);
+            //console.log(nameDetails.column('Password').data[0]);
+            //console.log(nameDetails.column('idSpreadsheet').data[0]);
+
+
+
+
+            document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
+
             //classes.column('Klass').data[i]
             /*
 
