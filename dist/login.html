@@ -144,7 +144,7 @@
                 if (nameDetails.column('Epost').data[0] ==  inputEmail && nameDetails.column('Password').data[0] ==  inputPassword) {
 
                     document.getElementById('main-content').innerHTML = startHTML;
-                    startView(nameDetails.column('idSpreadsheet').data[0]);
+                    startView(nameDetails.column('idSpreadsheet').data[0], nameDetails.column('Epost').data[0]);
 
                 } else {
 
@@ -187,11 +187,12 @@
 
             document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
 
-            function startView (idSpreadsheet) {
+            function startView (idSpreadsheet, Epost) {
 
                   // starttext for selectbox
                   var selectHTML = '<option value="Välj">Välj klass</option>';
                   var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
+                  var hiddenFormEpost = '<input id="Epost" name="Epost" value="' + Epost +'" type="hidden">';
 
                   //connect to Google Spreadsheet
                   var ds = new Miso.Dataset({
@@ -237,7 +238,7 @@
                       }
 
 
-                      document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>"
+                      document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>" + hiddenFormEpost;
                       document.getElementById('klass').innerHTML = selectHTML;
                       document.getElementById('selectKlassStats').innerHTML = selectHTML;
 
