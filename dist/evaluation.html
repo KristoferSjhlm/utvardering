@@ -46,9 +46,6 @@
 
 		<!-- the hidden form that are used to post the evaluation -->
 		<form id="input-form" action="" method="POST" target="no-target">
-			<input id="skola" placeholder="Skola" name="skola" value="SK" type="hidden">
-			<input id="amne" placeholder="Ämne" name="amne" value="TS" type="hidden">
-			<input id="larare" placeholder="Lärare" name="larare" value="TS" type="hidden">
 			<input id="klass" placeholder="Klass" name="klass" type="hidden">
 			<input id="mal" placeholder="Mål med lektion" name="mal" type="hidden">
 			<input id="utvardering" placeholder="Utvärdering av lektion" name="utvardering" type="hidden">
@@ -68,6 +65,8 @@
 		(function(){
     		'use strict';
 
+
+
     			// gets the URL-parameters
 				function getURLParam (oTarget, sVar) {
 				  return decodeURI(oTarget.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(sVar).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
@@ -77,6 +76,11 @@
 				var re = /[+]/gi;
 				var klassString = getURLParam(window.location, "klass").replace(re, ' ');
 				var malString = getURLParam(window.location, "mal").replace(re, ' ');
+
+				var idKlass = getURLParam(window.location, "idKlass").replace(re, ' ');
+			    var idMal = getURLParam(window.location, "idMal").replace(re, ' ');
+			    var idUtvardering = getURLParam(window.location, "idUtvardering").replace(re, ' ');
+			    var baseURL = getURLParam(window.location, "baseURL").replace(re, ' ');
 
 				// prints out the klass and mal from the URL on the page
 				document.getElementById('klass-from-url').innerHTML = klassString;
@@ -103,21 +107,16 @@
 
 				// sets the post query and sends it to the Google Docs on submit
 			    $('#input-form').one('submit',function(){
-			        var idSkola = "entry_1597234779=";
-			        var inputSkola = encodeURIComponent($('#skola').val());
-			        var idAmne = "entry_463573764=";
-			        var inputAmne = encodeURIComponent($('#amne').val());
-			        var idLarare = "entry_1557751062=";
-			        var inputLarare = encodeURIComponent($('#larare').val());
-			        var idKlass = "entry_1276656198=";
+
 			        var inputKlass = encodeURIComponent($('#klass').val());
-			        var idMal = "entry_331875402=";
+
 			        var inputMal = encodeURIComponent($('#mal').val());
-			        var idUtvardering = "entry_1135674495=";
+
 			        var inputUtvardering = encodeURIComponent($('#utvardering').val());
-			        var baseURL = 'https://docs.google.com/forms/d/1oTJ3GjrawWl8RWhv4Lb43lMhyWNQnfBHTaq2Sf2eR6U/formResponse?';
+			        
+			        var fullBaseURL = 'https://docs.google.com/forms/d/1eBf0T5nCtdwvCTygC1t1rhXaH4IC5Xf6wgaxCAUyeN0/formResponse?';
 			        var submitRef = '&submit=Submit';
-			        var submitURL = (baseURL + idSkola + inputSkola +"&" + idAmne + inputAmne + "&" + idLarare + inputLarare +"&" + idKlass + inputKlass + "&" + idMal + inputMal +"&" + idUtvardering + inputUtvardering + submitRef);
+			        var submitURL = (fullBaseURL + idKlass + "=" + inputKlass + "&" + idMal + "="  + inputMal +"&" + idUtvardering + "=" + inputUtvardering + submitRef);
 			        console.log(submitURL);
 			        $(this)[0].action=submitURL;
 
