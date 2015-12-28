@@ -232,44 +232,22 @@
                           document.location.reload(false);
                         };
                         
-                        document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonView (idSpreadsheet);});
+                        document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonView (idSpreadsheet, ds);});
 
                     });
                 }
 
-              function lessonView (idSpreadsheet) {  
+              function lessonView (idSpreadsheet, ds) {  
 
-                  document.getElementById("malTitle").innerHTML = ""
-                  document.getElementById("bargraph").innerHTML = ""
-                  document.getElementById("mean").innerHTML = ""
-                  var classes;
-                  var className = [];
-                  var classLessons = [];
-                  var classNameLessons = [];
-                  var counter = 0;
-                  var selectHTML = '<select name="select" id="selectLessonGoal"> <option value="Välj">Välj lektion</option>';
-
-                  //connect to Google Spreadsheet
-                  var ds = new Miso.Dataset({
-                      importer : Miso.Dataset.Importers.GoogleSpreadsheet,
-                      parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
-                      key : idSpreadsheet,
-                      worksheet : "1"
-                  });
-
-
-                  // get the data
-                  ds.fetch({ 
-                      success : function() {
-                          console.log(ds.columnNames(), ds.columnNames().length);
-                      },
-                      error : function() {
-                          console.log("Something went wrong. Are you sure you are connected to the internet?");
-                      }
-                  });
-
-                  // this function could be used if something need to be done after ds.fetch is done)
-                  _.when(ds.fetch()).then(function() {
+                      document.getElementById("malTitle").innerHTML = ""
+                      document.getElementById("bargraph").innerHTML = ""
+                      document.getElementById("mean").innerHTML = ""
+                      var classes;
+                      var className = [];
+                      var classLessons = [];
+                      var classNameLessons = [];
+                      var counter = 0;
+                      var selectHTML = '<select name="select" id="selectLessonGoal"> <option value="Välj">Välj lektion</option>';
 
                       var klassString = document.getElementById('selectKlassStats').value
 
@@ -277,7 +255,7 @@
                       document.getElementById('classes').innerHTML = "Klass: " + klassString;
                       
                       // filter the data on the class parameter
-                      className = this.where({
+                      className = ds.where({
                           // copy over the data for this columns
                           columns: ['Tidstämpel', 'Klass', 'Lektionsmal', 'Maluppfyllnad'],
                           // and only where the values are > 1
@@ -302,13 +280,13 @@
                           });
 
                           //Sort the data on the variabel Maluppfyllnad
-                          console.log("Före: " + classNameLessons[counter].column('Maluppfyllnad').data);
+                          //console.log("Före: " + classNameLessons[counter].column('Maluppfyllnad').data);
 
                           classNameLessons[counter].column('Maluppfyllnad').data.sort(function(a, b) {
                               return a - b;
                           });
 
-                          console.log("Efter: " + classNameLessons[counter].column('Maluppfyllnad').data);
+                          //console.log("Efter: " + classNameLessons[counter].column('Maluppfyllnad').data);
 
                           // adds an option-value to the select box for each Lektionsmal
                           selectHTML = selectHTML + '<option value="' + counter + '">' + classNameLessons[counter].column('Lektionsmal').data[0] + '</option>';
@@ -328,7 +306,6 @@
                       // put an eventlistener on the select-box
                       document.getElementById('selectMalStats').addEventListener ("change", function() { drawBarchart(document.getElementById('selectLessonGoal').value);});
                           
-                  });
                   
                   /**
                       * A reusable bar chart. Required data format:
