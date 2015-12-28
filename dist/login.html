@@ -22,10 +22,6 @@
 </head>
 <body> 
 
-
-
-
-
   <div id="main-content" class="container theme-showcase" role="main">
 
 
@@ -43,42 +39,9 @@
         -->
         <button id="form-submit" class="btn btn-primary">Sign in</button>
 
-
-<!--
-    <h1>Lektionsutvärdering</h1>
-  	
-  	<form method="get" action="evaluation.html" target="_blank">
-           
-        <p><span id="klassinput"></span>
-
-        </p>
-
-        <p><div id="malinput"></div>
-
-        </p>
-
-  	    <p><input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering"></p>
-
-
-
-  	</form>
-
-  	<h2>Grafik över tidigare utvärderingar</h2>
-
-    <form method="get" action="stats.html">
-        <p><strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select></p>
-        <p><input type="submit" class="btn btn-primary" value="Kolla in statistik för klassen"></p>
-    </form>
-
-    <a href="#"" id="test">Ladda om sidan/Börja om från början</a>
-
--->
   </div>
 
- 
-
 	<!-- load libraries in cache that are used on other pages -->
-
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -95,11 +58,27 @@
   <script type="text/javascript">
     (function(){
         'use strict';
+          // global variabels
 
-          var epost = "tomas.sjoholm@soderhamn.se"
-          // starttext for selectbox
-          //var selectHTML = '<option value="Välj">Välj klass</option>';
-          //var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
+          let startHTML = '<h1>Lektionsutvärdering</h1> \
+                          \
+                          <form method="get" action="evaluation.html" target="_blank">\
+                            <div id="klassinput"></div>\
+                            <div id="malinput"></div>\
+                            <div id="hiddenForm"></div>\
+                            <input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering">\
+                          </form>\
+                          \
+                          <h1>Grafik över tidigare utvärderingar</h1>\
+                          \
+                          <strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select>\
+                          \
+                          <h2 id="classes"></h2>\
+                          <div id="selectMalStats"></div>\
+                          <h1 id="malTitle"></h1>\
+                          <div id="bargraph"></div>\
+                          <h2 id="mean"></h2>'
+
 
           //connect to Google Spreadsheet
           var ds = new Miso.Dataset({
@@ -123,179 +102,140 @@
           // this function could be used if something need to be done after ds.fetch is done)
           _.when(ds.fetch()).then(function() {
 
+              // filter the data on the Epost parameter
+              function checkPassword() {
 
-            function checkPassword() {
-                var inputEmail = document.getElementById('inputEmail').value;
-                var inputPassword = document.getElementById('inputPassword').value;
+                  var inputEmail = document.getElementById('inputEmail').value;
+                  var inputPassword = document.getElementById('inputPassword').value;
 
-                var nameDetails = ds.where({
-                    // copy over the data for this columns
-                    columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet', 'baseURL', 'idKlass', 'idMal', 'idUtvardering'],
-                    // and only where the values are > 1
-                    rows: function(row) {
-                        return row.Epost == inputEmail
-                        //return row.Klass == classes.column('Klass').data[i];
-                    }
-                    
-                });
-                
-                alert(nameDetails.column('idSpreadsheet').data[0]);
-                //if (nameDetails.length ==  1) {
-
-                if (nameDetails.column('Epost').data[0] ==  inputEmail && nameDetails.column('Password').data[0] ==  inputPassword) {
-
-                    document.getElementById('main-content').innerHTML = startHTML;
-                    startView(nameDetails.column('idSpreadsheet').data[0], nameDetails.column('idKlass').data[0], nameDetails.column('idMal').data[0], nameDetails.column('idUtvardering').data[0], nameDetails.column('baseURL').data[0]);
-
-                } else {
-
-                    alert("Fel användarnamn eller lösenord. Försök igen.")
-
-                }
-
-            }
-
-            // filter the data on the Epost parameter
-            
-            let startHTML = '<h1>Lektionsutvärdering</h1> \
-                \
-                <form method="get" action="evaluation.html" target="_blank">\
-                    <p><span id="klassinput"></span></p>\
-                    <p><div id="malinput"></div></p>\
-                    <p><input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering"></p>\
-                </form>\
-                \
-                <h2>Grafik över tidigare utvärderingar</h2>\
-                \
-                    <p><strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select></p>\
-                    <p><input type="submit" id="selectButtonLesson" class="btn btn-primary" value="Kolla in statistik för klassen"></p>\
-                \
-                <h2><span id="classes"></span></h2>\
-                <p id="selectMal"></p>\
-                <h1><span id="malTitle"></span></h1>\
-                <div id="bargraph"></div>\
-                <h2><span id="mean"></span></h2>'
-
-
-
-            //console.log(nameDetails.column('Namn').data[0]);
-            //console.log(nameDetails.column('Epost').data[0]);
-            //console.log(nameDetails.column('Password').data[0]);
-            //console.log(nameDetails.column('idSpreadsheet').data[0]);
-
-
-
-
-            document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
-
-            function startView (idSpreadsheet, idKlass, idMal, idUtvardering, baseURL) {
-
-                  // starttext for selectbox
-                  var selectHTML = '<option value="Välj">Välj klass</option>';
-                  var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
-                  var hiddenForm = '<input id="idKlass" name="idKlass" value="' + idKlass +'" type="hidden">' +
-                                   '<input id="idMal" name="idMal" value="' + idMal +'" type="hidden">' +
-                                   '<input id="idUtvardering" name="idUtvardering" value="' + idUtvardering +'" type="hidden">' +
-                                   '<input id="baseURL" name="baseURL" value="' + baseURL +'" type="hidden">';
-
-                  //connect to Google Spreadsheet
-                  var ds = new Miso.Dataset({
-                      importer : Miso.Dataset.Importers.GoogleSpreadsheet,
-                      parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
-                      key : idSpreadsheet,
-                      worksheet : "1"
+                  var nameDetails = ds.where({
+                      // copy over the data for this columns
+                      columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet', 'baseURL', 'idKlass', 'idMal', 'idUtvardering'],
+                      // and only where the values are > 1
+                      rows: function(row) {
+                          return row.Epost == inputEmail
+                      }             
                   });
 
-                  // get the data
-                  ds.fetch({ 
-                      success : function() {
-                          console.log(ds.columnNames(), ds.columnNames().length);
-                      },
-                      error : function() {
-                          console.log("Something went wrong. Are you sure you are connected to the internet?");
-                      }
-                  });
+                  // check if both email and password matches
+                  if (nameDetails.column('Epost').data[0] ==  inputEmail && nameDetails.column('Password').data[0] ==  inputPassword) {
+                      document.getElementById('main-content').innerHTML = startHTML;
+                      // call the startview function and send the data connected to that email with it
+                      startView(nameDetails.column('idSpreadsheet').data[0], nameDetails.column('idKlass').data[0], nameDetails.column('idMal').data[0], nameDetails.column('idUtvardering').data[0], nameDetails.column('baseURL').data[0]);
 
-                  // this function could be used if something need to be done after ds.fetch is done)
-                  _.when(ds.fetch()).then(function() {
-
-
-                      //Get the different classes and sort by the variabel Klass
-                      var classes = ds.countBy('Klass');
-                      console.log("Före: " +classes.column('Klass').data);
-
-                      classes.sort(function(rowA, rowB) {
-                          if (rowA.Klass > rowB.Klass) {
-                              return 1;
-                          }
-                          if (rowA.Klass < rowB.Klass) {
-                              return -1;
-                          }
-                          return 0;
-                      });
-
-                      console.log("Efter: " + classes.column('Klass').data);
-
-                      for (var j = 0; j < classes.length; j++) {
-
-                          selectHTML = selectHTML + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
-                      }
-
-
-                      document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>" + hiddenForm;
-                      document.getElementById('klass').innerHTML = selectHTML;
-                      document.getElementById('selectKlassStats').innerHTML = selectHTML;
-
-
-                      //Get the different lessongoals and sort by the variabel Lektionsmal
-                      var lessongoals = ds.countBy('Lektionsmal');
-                      console.log("Före: " +lessongoals.column('Lektionsmal').data);
-
-                      lessongoals.sort(function(rowA, rowB) {
-                          if (rowA.Lektionsmal > rowB.Lektionsmal) {
-                              return 1;
-                          }
-                          if (rowA.Lektionsmal < rowB.Lektionsmal) {
-                              return -1;
-                          }
-                          return 0;
-                      });
-
-                      console.log("Efter: " + lessongoals.column('Lektionsmal').data);
-
-                      for (var j = 0; j < lessongoals.length; j++) {
-
-                          selectLessongoalsHTML = selectLessongoalsHTML + '<option value="' + lessongoals.column('Lektionsmal').data[j] + '">' + lessongoals.column('Lektionsmal').data[j] + '</option>';
-                      }
-
-                      document.getElementById('malinput').innerHTML = "<strong>Välj lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'>Ange ett nytt lektionsmål</a>"
-                      document.getElementById('mal').innerHTML = selectLessongoalsHTML;
-                      
-
-                      // on click show input form for new class
-                      document.getElementById("nyklass").addEventListener("click", function( event ) {
-                          document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
-                      }, false);
-
-                      
-                      // on click show input form for new lessongoal
-                      document.getElementById("nyttmal").addEventListener("click", function( event ) {
-                          document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
-                      }, false);
-
-                      var reloadPage = function(){
-                        document.location.reload(false);
-                      };
-
-                      //document.getElementById("selectKlassStats").addEventListener("change", function( event ) {
-                        // display the current click count inside the clicked div
-                      //  document.location.reload(false);
-                      //}, false);
-                      
-                      document.getElementById('selectButtonLesson').addEventListener ("click", function() { lessonView (idSpreadsheet);});
-
-                  });
+                  } else {
+                      // alert when wrong email or password
+                      alert("Fel användarnamn eller lösenord. Försök igen.")
+                  }
               }
+
+              document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
+
+              function startView (idSpreadsheet, idKlass, idMal, idUtvardering, baseURL) {
+
+                    // starttext for selectbox
+                    var selectHTML = '<option value="Välj">Välj klass</option>';
+                    var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
+                    document.getElementById('hiddenForm').innerHTML = '<input id="idKlass" name="idKlass" value="' + idKlass +'" type="hidden">' +
+                                     '<input id="idMal" name="idMal" value="' + idMal +'" type="hidden">' +
+                                     '<input id="idUtvardering" name="idUtvardering" value="' + idUtvardering +'" type="hidden">' +
+                                     '<input id="baseURL" name="baseURL" value="' + baseURL +'" type="hidden">';
+
+                    //connect to Google Spreadsheet
+                    var ds = new Miso.Dataset({
+                        importer : Miso.Dataset.Importers.GoogleSpreadsheet,
+                        parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
+                        key : idSpreadsheet,
+                        worksheet : "1"
+                    });
+
+                    // get the data
+                    ds.fetch({ 
+                        success : function() {
+                            console.log(ds.columnNames(), ds.columnNames().length);
+                        },
+                        error : function() {
+                            console.log("Something went wrong. Are you sure you are connected to the internet?");
+                        }
+                    });
+
+                    // this function could be used if something need to be done after ds.fetch is done)
+                    _.when(ds.fetch()).then(function() {
+
+                        //Get the different classes and sort by the variabel Klass
+                        var classes = ds.countBy('Klass');
+                        //console.log("Före: " +classes.column('Klass').data);
+
+                        classes.sort(function(rowA, rowB) {
+                            if (rowA.Klass > rowB.Klass) {
+                                return 1;
+                            }
+                            if (rowA.Klass < rowB.Klass) {
+                                return -1;
+                            }
+                            return 0;
+                        });
+
+                        //console.log("Efter: " + classes.column('Klass').data);
+
+                        for (var j = 0; j < classes.length; j++) {
+                            selectHTML = selectHTML + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
+                        }
+
+                        document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>"
+                        document.getElementById('klass').innerHTML = selectHTML;
+                        document.getElementById('selectKlassStats').innerHTML = selectHTML;
+
+
+                        //Get the different lessongoals and sort by the variabel Lektionsmal
+                        var lessongoals = ds.countBy('Lektionsmal');
+                        //console.log("Före: " +lessongoals.column('Lektionsmal').data);
+
+                        lessongoals.sort(function(rowA, rowB) {
+                            if (rowA.Lektionsmal > rowB.Lektionsmal) {
+                                return 1;
+                            }
+                            if (rowA.Lektionsmal < rowB.Lektionsmal) {
+                                return -1;
+                            }
+                            return 0;
+                        });
+
+                        //console.log("Efter: " + lessongoals.column('Lektionsmal').data);
+
+                        for (var j = 0; j < lessongoals.length; j++) {
+                            selectLessongoalsHTML = selectLessongoalsHTML + '<option value="' + lessongoals.column('Lektionsmal').data[j] + '">' + lessongoals.column('Lektionsmal').data[j] + '</option>';
+                        }
+
+                        document.getElementById('malinput').innerHTML = "<strong>Välj lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'>Ange ett nytt lektionsmål</a>"
+                        document.getElementById('mal').innerHTML = selectLessongoalsHTML;
+                        
+
+
+
+                        // on click show input form for new class
+                        document.getElementById("nyklass").addEventListener("click", function( event ) {
+                            document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
+                        }, false);
+
+                        
+                        // on click show input form for new lessongoal
+                        document.getElementById("nyttmal").addEventListener("click", function( event ) {
+                            document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
+                        }, false);
+
+
+
+
+
+                        var reloadPage = function(){
+                          document.location.reload(false);
+                        };
+                        
+                        document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonView (idSpreadsheet);});
+
+                    });
+                }
 
               function lessonView (idSpreadsheet) {  
 
@@ -329,17 +269,7 @@
                   });
 
                   // this function could be used if something need to be done after ds.fetch is done)
-
                   _.when(ds.fetch()).then(function() {
-
-                      // gets the URL-parameters
-                      //function getURLParam (oTarget, sVar) {
-                      //  return decodeURI(oTarget.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURI(sVar).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
-                      //}
-
-                      // gets the values for klass and mal and replaces the + in the URL with blank spaces
-                      //var re = /[+]/gi;
-                      //var klassString = getURLParam(window.location, "klass").replace(re, ' ');
 
                       var klassString = document.getElementById('selectKlassStats').value
 
@@ -386,19 +316,17 @@
                       }
 
                       //print out the selectbox on the page
-                      document.getElementById('selectMal').innerHTML = selectHTML + "</select>";
+                      document.getElementById('selectMalStats').innerHTML = selectHTML + "</select>";
 
                       // draw the Barchart and texts on the page for the chosen value
                       var drawBarchart = function(chosenValue){
-                          //alert(classNameLessons[chosenValue].column('Lektionsmal').data[0]);
                           document.getElementById('malTitle').innerHTML = classNameLessons[chosenValue].column('Lektionsmal').data[0];
                           barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
                           document.getElementById('mean').innerHTML = "Medelvärde: " + classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1);
                       };
 
-                      //alert(document.getElementById('selectLessonGoal').value)
                       // put an eventlistener on the select-box
-                      document.getElementById('selectMal').addEventListener ("change", function() { drawBarchart(document.getElementById('selectLessonGoal').value);});
+                      document.getElementById('selectMalStats').addEventListener ("change", function() { drawBarchart(document.getElementById('selectLessonGoal').value);});
                           
                   });
                   
