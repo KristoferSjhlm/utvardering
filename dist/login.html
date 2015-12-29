@@ -22,6 +22,8 @@
 </head>
 <body> 
 
+  <div id="meny"></div>
+
   <div id="main-content" class="container theme-showcase" role="main">
 
 
@@ -67,8 +69,7 @@
                             <div id="malinput"></div>\
                             <div id="hiddenForm"></div>\
                             <input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering">\
-                          </form>\
-                          <a href="#" id="linkToStats">Till statistik</a>'
+                          </form>'
 
           let startStatsHTML =  '<h1>Grafik över tidigare utvärderingar</h1>\
                           \
@@ -84,6 +85,7 @@
           var classLessons = [];
           var classNameLessons = [];
           var counter = 0;
+          var ds, idSpreadsheet, idKlass, idMal, idUtvardering, baseURL;
 
           //connect to name Google Spreadsheet
           var dsName = new Miso.Dataset({
@@ -127,7 +129,7 @@
                       
 
                       //connect to Google Spreadsheet for this teacher
-                      var ds = new Miso.Dataset({
+                      ds = new Miso.Dataset({
                           importer : Miso.Dataset.Importers.GoogleSpreadsheet,
                           parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
                           key : nameDetails.column('idSpreadsheet').data[0],
@@ -147,9 +149,16 @@
                       // this function could be used if something need to be done after ds.fetch is done)
                       _.when(ds.fetch()).then(function() {
 
-                          document.getElementById('main-content').innerHTML = startHTML;
+                          //document.getElementById('main-content').innerHTML = startHTML;
+                          document.getElementById('meny').innerHTML = '<a href="#" id="newLessonGoal">Nytt lektionsmål</a> <a href="#" id="linkToStats">Till statistik</a> <a href="#" id="logOut">Logga ut</a>'
+                          idSpreadsheet = nameDetails.column('idSpreadsheet').data[0];
+                          idKlass = nameDetails.column('idKlass').data[0];
+                          idMal = nameDetails.column('idMal').data[0];
+                          idUtvardering = nameDetails.column('idUtvardering').data[0]
+                          baseURL = nameDetails.column('baseURL').data[0];
                           // call the startview function and send the data connected to that email with it
-                          startView(ds, nameDetails.column('idSpreadsheet').data[0], nameDetails.column('idKlass').data[0], nameDetails.column('idMal').data[0], nameDetails.column('idUtvardering').data[0], nameDetails.column('baseURL').data[0]);
+
+                          startView();
                       });
 
                   } else {
@@ -161,9 +170,15 @@
               // pu an event listner on the submit button for login
               document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
 
-              function startView (ds, idSpreadsheet, idKlass, idMal, idUtvardering, baseURL) {
+
+              var reloadPage = function(){
+                  document.location.reload(false);
+              };
+
+              function startView () {
 
                     // starttext for selectbox
+                    document.getElementById('main-content').innerHTML = startHTML;
                     var selectHTMLClass = '<option value="Välj">Välj klass</option>';
                     var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
                     document.getElementById('hiddenForm').innerHTML = '<input id="idKlass" name="idKlass" value="' + idKlass +'" type="hidden">' +
@@ -171,9 +186,11 @@
                                      '<input id="idUtvardering" name="idUtvardering" value="' + idUtvardering +'" type="hidden">' +
                                      '<input id="baseURL" name="baseURL" value="' + baseURL +'" type="hidden">';
 
+
+
                     
                         //Get the different classes and sort by the variabel Klass
-                        var classes = ds.countBy('Klass');
+                        classes = ds.countBy('Klass');
                         //console.log("Före: " +classes.column('Klass').data);
 
                         classes.sort(function(rowA, rowB) {
@@ -232,17 +249,15 @@
                             document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
                         }, false);
 
-                        var reloadPage = function(){
-                          document.location.reload(false);
-                        };
-                        
-                        
 
-                        document.getElementById('linkToStats').addEventListener ("click", function() { lessonView (idSpreadsheet, ds);});
+                          document.getElementById('newLessonGoal').addEventListener ("click", function() { startView ();});
+                          document.getElementById('linkToStats').addEventListener ("click", function() { lessonView ();});
+                          document.getElementById('logOut').addEventListener ("click", function() { reloadPage ();});
+
 
               }
 
-              function lessonView (idSpreadsheet, ds) {  
+              function lessonView () {  
 
                       document.getElementById('main-content').innerHTML = startStatsHTML;
 
