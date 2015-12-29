@@ -27,10 +27,10 @@
   <div id="main-content" class="container theme-showcase" role="main">
 
 
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
+        <h2 class="form-signin-heading">Skriv in dina uppgifter</h2>
+        <label for="inputEmail" class="sr-only">Epost-adress</label>
         <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
+        <label for="inputPassword" class="sr-only">Lösenord</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
         <!--
         <div class="checkbox">
@@ -39,7 +39,8 @@
           </label>
         </div>
         -->
-        <button id="form-submit" class="btn btn-primary">Sign in</button>
+        <button id="form-submit" class="btn btn-primary">Logga in</button>
+        <span id="wrongPassword"></span>
 
   </div>
 
@@ -73,11 +74,9 @@
 
           let startStatsHTML =  '<h1>Grafik över tidigare utvärderingar</h1>\
                           \
-                          <strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select>\
-                          \
-                          <h2 id="classes"></h2>\
-                          <div id="selectMalStats"></div>\
-                          <h1 id="malTitle"></h1>\
+                          <select name="klass" id="selectKlassStats"></select>\
+                          <span id="selectMalStats"></span>\
+                          <h2 id="malTitle"></h2>\
                           <div id="bargraph"></div>\
                           <h2 id="mean"></h2>'
           var classes;
@@ -142,6 +141,7 @@
                               console.log(ds.columnNames(), ds.columnNames().length);
                           },
                           error : function() {
+
                               console.log("Something went wrong. Are you sure you are connected to the internet?");
                           }
                       });
@@ -163,7 +163,8 @@
 
                   } else {
                       // alert when wrong email or password
-                      alert("Fel användarnamn eller lösenord. Försök igen.")
+                      document.getElementById('wrongPassword').innerHTML = "Fel användarnamn eller lösenord. Försök igen!";
+
                   }
               }
 
@@ -293,16 +294,12 @@
                         }
 
                         document.getElementById('selectKlassStats').innerHTML = selectHTMLClass;
-                        //document.getElementById('selectKlassStats').innerHTML = selectHTMLClass;
-
-                      
-
-                      document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonViewGoal (ds);});
+                        document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonViewGoal (ds);});
 
                 }  
 
                 function lessonViewGoal (ds) {
-
+                      
                       
                       document.getElementById('malTitle').innerHTML = "";
                       document.getElementById('bargraph').innerHTML = "";
@@ -311,10 +308,8 @@
 
                       var selectHTML = '<select name="select" id="selectLessonGoal"> <option value="Välj">Välj lektion</option>';
                       var klassString = document.getElementById('selectKlassStats').value
-
-                      // sets the class name on the page
-                      document.getElementById('classes').innerHTML = "Klass: " + klassString;
                       
+
                       // filter the data on the class parameter
                       className = ds.where({
                           // copy over the data for this columns
@@ -354,15 +349,21 @@
                           counter = counter + 1;
                       }
 
+
                       //print out the selectbox on the page
                       document.getElementById('selectMalStats').innerHTML = selectHTML + "</select>";
 
                       // draw the Barchart and texts on the page for the chosen value
                       var drawBarchart = function(chosenValue){
+
                           //document.getElementById('bargraph').innerHTML = "";
-                          document.getElementById('malTitle').innerHTML = classNameLessons[chosenValue].column('Lektionsmal').data[0];
+                                                // sets the class name on the page
+                          //document.getElementById('classes').innerHTML = klassString;
+                          document.getElementById('malTitle').innerHTML = klassString + ": " + 
+                          classNameLessons[chosenValue].column('Lektionsmal').data[0] + " (medel " +
+                          classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1) + ")";
                           barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
-                          document.getElementById('mean').innerHTML = "Medelvärde: " + classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1);
+                          //document.getElementById('mean').innerHTML = "Medelvärde: " + classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1);
                       };
 
                       // put an eventlistener on the select-box
