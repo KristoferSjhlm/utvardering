@@ -68,8 +68,9 @@
                             <div id="hiddenForm"></div>\
                             <input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering">\
                           </form>\
-                          \
-                          <h1>Grafik över tidigare utvärderingar</h1>\
+                          <a href="#" id="linkToStats">Till statistik</a>'
+
+          let startStatsHTML =  '<h1>Grafik över tidigare utvärderingar</h1>\
                           \
                           <strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select>\
                           \
@@ -78,7 +79,11 @@
                           <h1 id="malTitle"></h1>\
                           <div id="bargraph"></div>\
                           <h2 id="mean"></h2>'
-
+          var classes;
+          var className = [];
+          var classLessons = [];
+          var classNameLessons = [];
+          var counter = 0;
 
           //connect to name Google Spreadsheet
           var dsName = new Miso.Dataset({
@@ -107,8 +112,6 @@
 
                   var inputEmail = document.getElementById('inputEmail').value;
                   var inputPassword = document.getElementById('inputPassword').value;
-
-                  alert(inputPassword);
 
                   var nameDetails = dsName.where({
                       // copy over the data for this columns
@@ -144,7 +147,6 @@
                       // this function could be used if something need to be done after ds.fetch is done)
                       _.when(ds.fetch()).then(function() {
 
-
                           document.getElementById('main-content').innerHTML = startHTML;
                           // call the startview function and send the data connected to that email with it
                           startView(ds, nameDetails.column('idSpreadsheet').data[0], nameDetails.column('idKlass').data[0], nameDetails.column('idMal').data[0], nameDetails.column('idUtvardering').data[0], nameDetails.column('baseURL').data[0]);
@@ -156,40 +158,20 @@
                   }
               }
 
+              // pu an event listner on the submit button for login
               document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
 
               function startView (ds, idSpreadsheet, idKlass, idMal, idUtvardering, baseURL) {
 
                     // starttext for selectbox
-                    var selectHTML = '<option value="Välj">Välj klass</option>';
+                    var selectHTMLClass = '<option value="Välj">Välj klass</option>';
                     var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
                     document.getElementById('hiddenForm').innerHTML = '<input id="idKlass" name="idKlass" value="' + idKlass +'" type="hidden">' +
                                      '<input id="idMal" name="idMal" value="' + idMal +'" type="hidden">' +
                                      '<input id="idUtvardering" name="idUtvardering" value="' + idUtvardering +'" type="hidden">' +
                                      '<input id="baseURL" name="baseURL" value="' + baseURL +'" type="hidden">';
 
-                    //connect to Google Spreadsheet
-                    /*
-                    var ds = new Miso.Dataset({
-                        importer : Miso.Dataset.Importers.GoogleSpreadsheet,
-                        parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
-                        key : idSpreadsheet,
-                        worksheet : "1"
-                    });
-
-                    // get the data
-                    ds.fetch({ 
-                        success : function() {
-                            console.log(ds.columnNames(), ds.columnNames().length);
-                        },
-                        error : function() {
-                            console.log("Something went wrong. Are you sure you are connected to the internet?");
-                        }
-                    });
-
-                    // this function could be used if something need to be done after ds.fetch is done)
-                    _.when(ds.fetch()).then(function() {
-                    */
+                    
                         //Get the different classes and sort by the variabel Klass
                         var classes = ds.countBy('Klass');
                         //console.log("Före: " +classes.column('Klass').data);
@@ -207,12 +189,12 @@
                         //console.log("Efter: " + classes.column('Klass').data);
 
                         for (var j = 0; j < classes.length; j++) {
-                            selectHTML = selectHTML + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
+                            selectHTMLClass = selectHTMLClass + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
                         }
 
                         document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>"
-                        document.getElementById('klass').innerHTML = selectHTML;
-                        document.getElementById('selectKlassStats').innerHTML = selectHTML;
+                        document.getElementById('klass').innerHTML = selectHTMLClass;
+                        //document.getElementById('selectKlassStats').innerHTML = selectHTMLClass;
 
 
                         //Get the different lessongoals and sort by the variabel Lektionsmal
@@ -254,24 +236,65 @@
                           document.location.reload(false);
                         };
                         
-                        document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonView (idSpreadsheet, ds);});
+                        
 
-                    //});
-                }
+                        document.getElementById('linkToStats').addEventListener ("click", function() { lessonView (idSpreadsheet, ds);});
+
+              }
 
               function lessonView (idSpreadsheet, ds) {  
+
+                      document.getElementById('main-content').innerHTML = startStatsHTML;
+
 
                       document.getElementById("malTitle").innerHTML = ""
                       document.getElementById("bargraph").innerHTML = ""
                       document.getElementById("mean").innerHTML = ""
 
-                      var classes;
-                      var className = [];
-                      var classLessons = [];
-                      var classNameLessons = [];
-                      var counter = 0;
+
+                      var selectHTMLClass = '<option value="Välj">Välj klass</option>';
                       var selectHTML = '<select name="select" id="selectLessonGoal"> <option value="Välj">Välj lektion</option>';
 
+
+                      //Get the different classes and sort by the variabel Klass
+                        var classes = ds.countBy('Klass');
+
+                        //console.log("Före: " +classes.column('Klass').data);
+
+                        classes.sort(function(rowA, rowB) {
+                            if (rowA.Klass > rowB.Klass) {
+                                return 1;
+                            }
+                            if (rowA.Klass < rowB.Klass) {
+                                return -1;
+                            }
+                            return 0;
+                        });
+
+                        //console.log("Efter: " + classes.column('Klass').data);
+
+                        for (var j = 0; j < classes.length; j++) {
+                            selectHTMLClass = selectHTMLClass + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
+                        }
+
+                        document.getElementById('selectKlassStats').innerHTML = selectHTMLClass;
+                        //document.getElementById('selectKlassStats').innerHTML = selectHTMLClass;
+
+                      
+
+                      document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonViewGoal (ds);});
+
+                }  
+
+                function lessonViewGoal (ds) {
+
+                      
+                      document.getElementById('malTitle').innerHTML = "";
+                      document.getElementById('bargraph').innerHTML = "";
+                      document.getElementById('mean').innerHTML = "";
+                      
+
+                      var selectHTML = '<select name="select" id="selectLessonGoal"> <option value="Välj">Välj lektion</option>';
                       var klassString = document.getElementById('selectKlassStats').value
 
                       // sets the class name on the page
