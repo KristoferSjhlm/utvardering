@@ -80,8 +80,8 @@
                           <h2 id="mean"></h2>'
 
 
-          //connect to Google Spreadsheet
-          var ds = new Miso.Dataset({
+          //connect to name Google Spreadsheet
+          var dsName = new Miso.Dataset({
               importer : Miso.Dataset.Importers.GoogleSpreadsheet,
               parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
               key : "1hu-JDIRDCDIJjFfZMHq6jeUokl4YKkxGh8ctuS4H0ik",
@@ -89,9 +89,9 @@
           });
 
           // get the data
-          ds.fetch({ 
+          dsName.fetch({ 
               success : function() {
-                  console.log(ds.columnNames(), ds.columnNames().length);
+                  console.log(dsName.columnNames(), dsName.columnNames().length);
               },
               error : function() {
                   console.log("Something went wrong. Are you sure you are connected to the internet?");
@@ -100,7 +100,7 @@
 
           
           // this function could be used if something need to be done after ds.fetch is done)
-          _.when(ds.fetch()).then(function() {
+          _.when(dsName.fetch()).then(function() {
 
               // filter the data on the Epost parameter
               function checkPassword() {
@@ -108,7 +108,9 @@
                   var inputEmail = document.getElementById('inputEmail').value;
                   var inputPassword = document.getElementById('inputPassword').value;
 
-                  var nameDetails = ds.where({
+                  alert(inputPassword);
+
+                  var nameDetails = dsName.where({
                       // copy over the data for this columns
                       columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet', 'baseURL', 'idKlass', 'idMal', 'idUtvardering'],
                       // and only where the values are > 1
@@ -119,9 +121,34 @@
 
                   // check if both email and password matches
                   if (nameDetails.column('Epost').data[0] ==  inputEmail && nameDetails.column('Password').data[0] ==  inputPassword) {
-                      document.getElementById('main-content').innerHTML = startHTML;
-                      // call the startview function and send the data connected to that email with it
-                      startView(nameDetails.column('idSpreadsheet').data[0], nameDetails.column('idKlass').data[0], nameDetails.column('idMal').data[0], nameDetails.column('idUtvardering').data[0], nameDetails.column('baseURL').data[0]);
+                      
+
+                      //connect to Google Spreadsheet for this teacher
+                      var ds = new Miso.Dataset({
+                          importer : Miso.Dataset.Importers.GoogleSpreadsheet,
+                          parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
+                          key : nameDetails.column('idSpreadsheet').data[0],
+                          worksheet : "1"
+                      });
+
+                      // get the data
+                      ds.fetch({ 
+                          success : function() {
+                              console.log(ds.columnNames(), ds.columnNames().length);
+                          },
+                          error : function() {
+                              console.log("Something went wrong. Are you sure you are connected to the internet?");
+                          }
+                      });
+
+                      // this function could be used if something need to be done after ds.fetch is done)
+                      _.when(ds.fetch()).then(function() {
+
+
+                          document.getElementById('main-content').innerHTML = startHTML;
+                          // call the startview function and send the data connected to that email with it
+                          startView(ds, nameDetails.column('idSpreadsheet').data[0], nameDetails.column('idKlass').data[0], nameDetails.column('idMal').data[0], nameDetails.column('idUtvardering').data[0], nameDetails.column('baseURL').data[0]);
+                      });
 
                   } else {
                       // alert when wrong email or password
@@ -131,7 +158,7 @@
 
               document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
 
-              function startView (idSpreadsheet, idKlass, idMal, idUtvardering, baseURL) {
+              function startView (ds, idSpreadsheet, idKlass, idMal, idUtvardering, baseURL) {
 
                     // starttext for selectbox
                     var selectHTML = '<option value="Välj">Välj klass</option>';
@@ -142,6 +169,7 @@
                                      '<input id="baseURL" name="baseURL" value="' + baseURL +'" type="hidden">';
 
                     //connect to Google Spreadsheet
+                    /*
                     var ds = new Miso.Dataset({
                         importer : Miso.Dataset.Importers.GoogleSpreadsheet,
                         parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
@@ -161,7 +189,7 @@
 
                     // this function could be used if something need to be done after ds.fetch is done)
                     _.when(ds.fetch()).then(function() {
-
+                    */
                         //Get the different classes and sort by the variabel Klass
                         var classes = ds.countBy('Klass');
                         //console.log("Före: " +classes.column('Klass').data);
@@ -211,8 +239,6 @@
                         document.getElementById('mal').innerHTML = selectLessongoalsHTML;
                         
 
-
-
                         // on click show input form for new class
                         document.getElementById("nyklass").addEventListener("click", function( event ) {
                             document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
@@ -224,17 +250,13 @@
                             document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
                         }, false);
 
-
-
-
-
                         var reloadPage = function(){
                           document.location.reload(false);
                         };
                         
                         document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonView (idSpreadsheet, ds);});
 
-                    });
+                    //});
                 }
 
               function lessonView (idSpreadsheet, ds) {  
@@ -242,6 +264,7 @@
                       document.getElementById("malTitle").innerHTML = ""
                       document.getElementById("bargraph").innerHTML = ""
                       document.getElementById("mean").innerHTML = ""
+
                       var classes;
                       var className = [];
                       var classLessons = [];
@@ -298,6 +321,7 @@
 
                       // draw the Barchart and texts on the page for the chosen value
                       var drawBarchart = function(chosenValue){
+                          //document.getElementById('bargraph').innerHTML = "";
                           document.getElementById('malTitle').innerHTML = classNameLessons[chosenValue].column('Lektionsmal').data[0];
                           barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
                           document.getElementById('mean').innerHTML = "Medelvärde: " + classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1);
