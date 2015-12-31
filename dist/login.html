@@ -98,6 +98,7 @@
           dsName.fetch({ 
               success : function() {
                   console.log(dsName.columnNames(), dsName.columnNames().length);
+
               },
               error : function() {
                   console.log("Something went wrong. Are you sure you are connected to the internet?");
@@ -168,7 +169,7 @@
                   }
               }
 
-              // pu an event listner on the submit button for login
+              // put an event listner on the submit button for login
               document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
 
 
@@ -271,6 +272,7 @@
                       // get the data
                       ds.fetch({ 
                           success : function() {
+
                               console.log("new " + ds.columnNames(), ds.columnNames().length);
      
 

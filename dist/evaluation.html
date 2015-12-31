@@ -74,8 +74,54 @@
 
 				// gets the values for klass and mal and replaces the + in the URL with blank spaces
 				var re = /[+]/gi;
+
 				var klassString = getURLParam(window.location, "klass").replace(re, ' ');
 				var malString = getURLParam(window.location, "mal").replace(re, ' ');
+
+				// replaces the %2C in the string with kommas (,)
+				re = /%2C/gi;
+				
+				klassString = klassString.replace(re, ',');
+				malString = malString.replace(re, ',');
+
+				// replaces the %26 in the string with &
+				re = /%26/gi;
+				
+				klassString = klassString.replace(re, '&');
+				malString = malString.replace(re, '&');
+
+				// replaces the %2F in the string with /
+				re = /%2F/gi;
+				
+				klassString = klassString.replace(re, '/');
+				malString = malString.replace(re, '/');
+
+				// replaces the %3A in the string with /
+				re = /%3A/gi;
+				
+				klassString = klassString.replace(re, ':');
+				malString = malString.replace(re, ':');
+
+				
+				// replaces the %23 in the string with #
+				re = /%23/gi;
+				
+				klassString = klassString.replace(re, '#');
+				malString = malString.replace(re, '#');
+
+				// replaces the %3B in the string with ;
+				re = /%3B/gi;
+				
+				klassString = klassString.replace(re, ';');
+				malString = malString.replace(re, ';');
+
+				// replaces the %3B in the string with ;
+				re = /"/gi;
+				
+				klassString = klassString.replace(re, "'");
+				malString = malString.replace(re, "'");
+
+				
 
 				var idKlass = getURLParam(window.location, "idKlass").replace(re, ' ');
 			    var idMal = getURLParam(window.location, "idMal").replace(re, ' ');
