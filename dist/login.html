@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Lektionsmål inlogg</title>
+    <title>Lektionsmål</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,20 +27,17 @@
   <div id="main-content" class="container theme-showcase" role="main">
 
 
-        <h2 class="form-signin-heading">Skriv in dina uppgifter</h2>
-        <label for="inputEmail" class="sr-only">Epost-adress</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Lösenord</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <!--
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
-        -->
-        <button id="form-submit" class="btn btn-primary">Logga in</button>
-        <span id="wrongPassword"></span>
+      <form action="#">
+          <div class="input-group">
+              <h2 class="form-signin-heading">Skriv in dina uppgifter</h2>
+              <label for="inputEmail" class="sr-only">Epost-adress</label>
+              <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus aria-describedby="basic-addon2">
+              <label for="inputPassword" class="sr-only">Lösenord</label>
+              <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+              <button id="form-submit" class="btn btn-primary">Logga in</button>
+              <span id="wrongPassword"></span>
+          </div>
+      </form>
 
   </div>
 
@@ -63,14 +60,19 @@
         'use strict';
           // global variabels
 
+
+
           let startHTML = '<h1>Lektionsutvärdering</h1> \
                           \
                           <form method="get" action="evaluation.html" target="_blank">\
-                            <div id="klassinput"></div>\
-                            <div id="malinput"></div>\
-                            <div id="hiddenForm"></div>\
-                            <input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering">\
+                            <div class="input-group">\
+                              <div id="klassinput"></div>\
+                              <div id="malinput"></div>\
+                              <div id="hiddenForm"></div>\
+                              <input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering">\
+                            </div>\
                           </form>'
+
 
           let startStatsHTML =  '<h1>Grafik över tidigare utvärderingar</h1>\
                           \
@@ -242,13 +244,13 @@
 
                         // on click show input form for new class
                         document.getElementById("nyklass").addEventListener("click", function( event ) {
-                            document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
+                            document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass Skola (ämne)' name='klass' required></label>" 
                         }, false);
 
                         
                         // on click show input form for new lessongoal
                         document.getElementById("nyttmal").addEventListener("click", function( event ) {
-                            document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
+                            document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Beskriv lektionsmålet' name='mal' required></label>" 
                         }, false);
 
 

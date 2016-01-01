@@ -160,7 +160,7 @@
 
 			        var inputUtvardering = encodeURIComponent($('#utvardering').val());
 			        
-			        var fullBaseURL = 'https://docs.google.com/forms/d/1eBf0T5nCtdwvCTygC1t1rhXaH4IC5Xf6wgaxCAUyeN0/formResponse?';
+			        var fullBaseURL = 'https://docs.google.com/forms/d/' + baseURL + '/formResponse?';
 			        var submitRef = '&submit=Submit';
 			        var submitURL = (fullBaseURL + idKlass + "=" + inputKlass + "&" + idMal + "="  + inputMal +"&" + idUtvardering + "=" + inputUtvardering + submitRef);
 			        console.log(submitURL);
