@@ -11,7 +11,29 @@
 		font-size: 1.3em;
 	}
 
+	.input-group{
+		padding-bottom: 10px;
+	}
+
+	.container {
+  		padding-right: 15px;
+  		padding-left: 15px;
+  		margin-top: 10px;
+
+	}
+
+	.menu-link{
+		font-size: 1.2em;
+		padding-top: 10px;
+		padding-right: 10px;
+	}
 	
+	.page-header {
+    	padding-bottom: 5px;
+    	margin: 40px 0 20px;
+    	border-bottom: 1px solid #eee;
+	}
+
 	.buttons{
 		position: absolute;
 	}
@@ -80,4 +102,6 @@
       fill: #4baf12;
     }
 
-    /* start classes for the reusable d3 barchart*/
+    .Barchart{
+    	margin: 0;
+    }

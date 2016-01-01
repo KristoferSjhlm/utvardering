@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Lektionsutvärdering och statistik för skolklasser</title>
+    <title>Lektionsmål</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,163 +22,37 @@
 </head>
 <body> 
 
+  <div id="meny" class="container"></div>
 
-  <div class="container theme-showcase" role="main">
+  <div id="main-content" class="container" role="main">
+
+      <h1>Välkommen till Lektionsmål</h1>
 
 
-    <h1>Lektionsutvärdering</h1>
-  	
-  	<form method="get" action="evaluation.html" target="_blank">
-           
-        <p><span id="klassinput"></span>
-        <!--<p><strong>Ange klass: </strong> <select name='klass' id='klass'></select></p>
-  	    <p><label>Ange klass <input id="klass" placeholder="Klass" name="klass"></label></p>-->
-        </p>
-
-        <p><div id="malinput"></div>
-        <!--<p><strong>Välj lektionsmål: </strong> <select name="mal" id="mal"></select></p>
-  	    <p><label>Mål med lektionen <input id="mal" placeholder="Lektionsmål" name="mal" required></label></p>-->
-        </p>
-
-  	    <p><input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering"></p>
-
-        <!--<a href="#" id="test">Tillbaka</a>-->
-
-  	</form>
-
-  	<h2>Grafik över tidigare utvärderingar</h2>
-
-    <form method="get" action="stats.html">
-        <p><strong>Välj klass: </strong> <select name="klass" id="selectKlassStats"></select></p>
-        <p><input type="submit" class="btn btn-primary" value="Kolla in statistik för klassen"></p>
-    </form>
-
-    <a href='#' id='test'>Ladda om sidan/Börja om från början</a>
+          <div class="input-group">
+              <h2 class="form-signin-heading">Skriv in dina uppgifter</h2>
+              <label for="inputEmail" class="sr-only">Epost-adress</label>
+              <input type="email" id="inputEmail" class="form-control" placeholder="Epost-adress" required autofocus>
+              <label for="inputPassword" class="sr-only">Lösenord</label>
+              <input type="password" id="inputPassword" class="form-control" placeholder="Lösenord" required>
+          </div>
+              <button id="form-submit" class="btn btn-primary">Logga in</button>
+              <span style="color: red" id="wrongPassword"></span>
+          
 
   </div>
 
- 
-
 	<!-- load libraries in cache that are used on other pages -->
-
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js" charset="utf-8"></script>
-  <!--<script src="js/lib/d3.chart.js"></script>-->
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="js/lib/d3.chart.min.js"></script>
   <script src="js/lib/miso.ds.deps.js"></script>
-
-  <!-- Script that takes out all classnames from the spreadsheet -->
-
-  <script type="text/javascript">
-    (function(){
-        'use strict';
-
-          // starttext for selectbox
-          var selectHTML = '<option value="Välj">Välj klass</option>';
-          var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
-
-          //connect to Google Spreadsheet
-          var ds = new Miso.Dataset({
-              importer : Miso.Dataset.Importers.GoogleSpreadsheet,
-              parser : Miso.Dataset.Parsers.GoogleSpreadsheet,
-              key : "11lD3mj-ajKuJyssfN1_dW1ZJoato2X8bzqvilI1e_CE",
-              worksheet : "1"
-          });
-
-          // get the data
-          ds.fetch({ 
-              success : function() {
-                  console.log(ds.columnNames(), ds.columnNames().length);
-              },
-              error : function() {
-                  console.log("Something went wrong. Are you sure you are connected to the internet?");
-              }
-          });
-
-          // this function could be used if something need to be done after ds.fetch is done)
-          _.when(ds.fetch()).then(function() {
-
-              //Get the different classes and sort by the variabel Klass
-              var classes = ds.countBy('Klass');
-              console.log("Före: " +classes.column('Klass').data);
-
-              classes.sort(function(rowA, rowB) {
-                  if (rowA.Klass > rowB.Klass) {
-                      return 1;
-                  }
-                  if (rowA.Klass < rowB.Klass) {
-                      return -1;
-                  }
-                  return 0;
-              });
-
-              console.log("Efter: " + classes.column('Klass').data);
-
-              for (var j = 0; j < classes.length; j++) {
-
-                  selectHTML = selectHTML + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
-              }
-
-
-              document.getElementById('klassinput').innerHTML = "<strong>Ange klass: </strong> <select name='klass' id='klass'></select> <a href='#'' id='nyklass'>Ange en ny klass</a>"
-              document.getElementById('klass').innerHTML = selectHTML;
-              document.getElementById('selectKlassStats').innerHTML = selectHTML;
-
-
-              //Get the different lessongoals and sort by the variabel Lektionsmal
-              var lessongoals = ds.countBy('Lektionsmal');
-              console.log("Före: " +lessongoals.column('Lektionsmal').data);
-
-              lessongoals.sort(function(rowA, rowB) {
-                  if (rowA.Lektionsmal > rowB.Lektionsmal) {
-                      return 1;
-                  }
-                  if (rowA.Lektionsmal < rowB.Lektionsmal) {
-                      return -1;
-                  }
-                  return 0;
-              });
-
-              console.log("Efter: " + lessongoals.column('Lektionsmal').data);
-
-              for (var j = 0; j < lessongoals.length; j++) {
-
-                  selectLessongoalsHTML = selectLessongoalsHTML + '<option value="' + lessongoals.column('Lektionsmal').data[j] + '">' + lessongoals.column('Lektionsmal').data[j] + '</option>';
-              }
-
-              document.getElementById('malinput').innerHTML = "<strong>Välj lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'>Ange ett nytt lektionsmål</a>"
-              document.getElementById('mal').innerHTML = selectLessongoalsHTML;
-              
-
-              // on click show input form for new class
-              document.getElementById("nyklass").addEventListener("click", function( event ) {
-                document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' placeholder='Klass, ämne, skola' name='klass'></label>" 
-              }, false);
-
-              
-              // on click show input form for new lessongoal
-              document.getElementById("nyttmal").addEventListener("click", function( event ) {
-                document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' placeholder='Lektionsmål' name='mal'required></label>" 
-              }, false);
-
-              var reloadPage = function(){
-                document.location.reload(false);
-              };
-
-              document.getElementById("test").addEventListener("click", function( event ) {
-                // display the current click count inside the clicked div
-                document.location.reload(false);
-              }, false);
-
-          });
-
-      })();
-
-    </script>
+  <script src="js/lektionsmal.js"></script>
 
 </body>
 </html>
