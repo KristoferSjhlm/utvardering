@@ -10,7 +10,7 @@
                               <div class="input-group" id="klassinput"></div>\
                               <div class="input-group" id="malinput"></div>\
                               <div id="hiddenForm"></div>\
-                              <input type="submit" class="btn btn-primary" value="Starta ny lektionsutvärdering">\
+                              <input type="submit" class="btn btn-primary" value="Starta lektionsutvärderingen i nytt fönster">\
                             </div>\
                           </form>'
 
@@ -44,20 +44,21 @@
 
               },
               error : function() {
-                  console.log("Something went wrong. Are you sure you are connected to the internet?");
+                  alert("Something went wrong. Are you sure you are connected to the internet?");
               }
           });
 
-          
           // this function could be used if something need to be done after ds.fetch is done)
           _.when(dsName.fetch()).then(function() {
 
               // filter the data on the Epost parameter
               function checkPassword() {
 
+                  // get the login values 
                   var inputEmail = document.getElementById('inputEmail').value;
                   var inputPassword = document.getElementById('inputPassword').value;
 
+                  // get the data from the Google spreadsheet
                   var nameDetails = dsName.where({
                       // copy over the data for this columns
                       columns: ['Namn', 'Epost', 'Password', 'idSpreadsheet', 'baseURL', 'idKlass', 'idMal', 'idUtvardering'],
@@ -86,24 +87,26 @@
                           },
                           error : function() {
 
-                              console.log("Something went wrong. Are you sure you are connected to the internet?");
+                              alert("Something went wrong. Are you sure you are connected to the internet?");
                           }
                       });
 
                       // this function could be used if something need to be done after ds.fetch is done)
                       _.when(ds.fetch()).then(function() {
 
-                          //document.getElementById('main-content').innerHTML = startHTML;
+                          // print menu links
                           document.getElementById('meny').innerHTML = '<span class="page-header"><a href="#" class="menu-link" id="newLessonGoal">Ny lektionsutvärdering</a>' + 
                           ' <a href="#" class="menu-link" id="linkToStats">Kolla statistik</a>' + 
                           ' <a href="#" class="menu-link" id="logOut">Logga ut</a> </span>'
+                          
+                          // get the data concerning this teacher from the spreadsheet lektionsmalTabell
                           idSpreadsheet = nameDetails.column('idSpreadsheet').data[0];
                           idKlass = nameDetails.column('idKlass').data[0];
                           idMal = nameDetails.column('idMal').data[0];
                           idUtvardering = nameDetails.column('idUtvardering').data[0]
                           baseURL = nameDetails.column('baseURL').data[0];
-                          // call the startview function and send the data connected to that email with it
 
+                          // call the startview function and send the data connected to that email with it
                           startView();
                       });
 
@@ -117,27 +120,25 @@
               // put an event listner on the submit button for login
               document.getElementById('form-submit').addEventListener ("click", function() { checkPassword();});
 
-
+              // Use reload to log out
               var reloadPage = function(){
                   document.location.reload(false);
               };
 
               function startView () {
 
-                    // starttext for selectbox
-                    document.getElementById('main-content').innerHTML = startHTML;
-                    var selectHTMLClass = '<option>Välj klass</option>';
-                    var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
-                    document.getElementById('hiddenForm').innerHTML = '<input id="idKlass" name="idKlass" value="' + idKlass +'" type="hidden">' +
-                                     '<input id="idMal" name="idMal" value="' + idMal +'" type="hidden">' +
-                                     '<input id="idUtvardering" name="idUtvardering" value="' + idUtvardering +'" type="hidden">' +
-                                     '<input id="baseURL" name="baseURL" value="' + baseURL +'" type="hidden">';
-
-
-
-                    
+                        // starttext for selectbox
+                        document.getElementById('main-content').innerHTML = startHTML;
+                        var selectHTMLClass = '<option>Välj klass</option>';
+                        var selectLessongoalsHTML = '<option value="Välj">Välj lektionsmål</option>';
+                        document.getElementById('hiddenForm').innerHTML = '<input id="idKlass" name="idKlass" value="' + idKlass +'" type="hidden">' +
+                                         '<input id="idMal" name="idMal" value="' + idMal +'" type="hidden">' +
+                                         '<input id="idUtvardering" name="idUtvardering" value="' + idUtvardering +'" type="hidden">' +
+                                         '<input id="baseURL" name="baseURL" value="' + baseURL +'" type="hidden">';
+                        
                         //Get the different classes and sort by the variabel Klass
                         classes = ds.countBy('Klass');
+
                         //console.log("Före: " +classes.column('Klass').data);
 
                         classes.sort(function(rowA, rowB) {
@@ -158,11 +159,11 @@
 
                         document.getElementById('klassinput').innerHTML = "<strong>Klass: </strong> <select name='klass' id='klass'></select> <a href='#' id='nyklass'> Ange ny klass</a>"
                         document.getElementById('klass').innerHTML = selectHTMLClass;
-                        //document.getElementById('selectKlassStats').innerHTML = selectHTMLClass;
 
 
                         //Get the different lessongoals and sort by the variabel Lektionsmal
                         var lessongoals = ds.countBy('Lektionsmal');
+
                         //console.log("Före: " +lessongoals.column('Lektionsmal').data);
 
                         lessongoals.sort(function(rowA, rowB) {
@@ -177,10 +178,12 @@
 
                         //console.log("Efter: " + lessongoals.column('Lektionsmal').data);
 
+                        //loop through all lessongoals for this class
                         for (var j = 0; j < lessongoals.length; j++) {
                             selectLessongoalsHTML = selectLessongoalsHTML + '<option value="' + lessongoals.column('Lektionsmal').data[j] + '">' + lessongoals.column('Lektionsmal').data[j] + '</option>';
                         }
 
+                        //create the selectboc for the lessongoals
                         document.getElementById('malinput').innerHTML = "<strong>Lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'> Ange nytt lektionsmål</a>"
                         document.getElementById('mal').innerHTML = selectLessongoalsHTML;
                         
@@ -196,7 +199,7 @@
                             document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' class='form-control' placeholder='Beskriv lektionsmålet' name='mal' required></label>" 
                         }, false);
 
-
+                        // add event triggers on the menu-links
                         document.getElementById('newLessonGoal').addEventListener ("click", function() { startView ();});
                         document.getElementById('linkToStats').addEventListener ("click", function() { lessonView ();});
                         document.getElementById('logOut').addEventListener ("click", function() { reloadPage ();});
@@ -217,13 +220,8 @@
                       // get the data
                       ds.fetch({ 
                           success : function() {
-
-                              //console.log("new " + ds.columnNames(), ds.columnNames().length);
      
-
-
                               document.getElementById('main-content').innerHTML = startStatsHTML;
-
 
                               document.getElementById("malTitle").innerHTML = ""
                               document.getElementById("bargraph").innerHTML = ""
@@ -255,13 +253,14 @@
                                     selectHTMLClass = selectHTMLClass + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
                                 }
 
+                                // print the class selectbox and add a event listener on change
                                 document.getElementById('selectKlassStats').innerHTML = selectHTMLClass;
                                 document.getElementById('selectKlassStats').addEventListener ("change", function() { lessonViewGoal ();});
 
                                              },
                           error : function() {
 
-                              console.log("Something went wrong. Are you sure you are connected to the internet?");
+                              alert("Something went wrong. Are you sure you are connected to the internet?");
                           }
                       });
                 }  
