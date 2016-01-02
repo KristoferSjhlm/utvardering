@@ -28,7 +28,7 @@
 
       <h1>Välkommen till Lektionsmål</h1>
 
-
+        <form id="input-form" action="" method="POST" target="no-target">
           <div class="input-group">
               <h2 class="form-signin-heading">Skriv in dina uppgifter</h2>
               <label for="inputEmail" class="sr-only">Epost-adress</label>
@@ -38,10 +38,12 @@
           </div>
               <button id="form-submit" class="btn btn-primary">Logga in</button>
               <span style="color: red" id="wrongPassword"></span>
-          
+        </form>
 
   </div>
 
+  <iframe src="#" id="no-target" name="no-target" style="visibility:hidden"></iframe>
+  
 	<!-- load libraries in cache that are used on other pages -->
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

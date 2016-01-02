@@ -1,12 +1,9 @@
-
 (function(){
     'use strict';
 
         // global variabels
 
-
-
-          let startHTML = '<h1>Lektionsutvärdering</h1> \
+          var startHTML = '<h1>Lektionsutvärdering</h1> \
                           \
                           <form method="get" action="evaluation.html" target="_blank">\
                             <div class="input-group">\
@@ -18,7 +15,7 @@
                           </form>'
 
 
-          let startStatsHTML =  '<h1>Statistik över tidigare lektionsmål</h1>\
+          var startStatsHTML =  '<h1>Statistik över tidigare lektionsmål</h1>\
                           \
                           <select name="klass" id="selectKlassStats"></select>\
                           <span id="selectMalStats"></span>\
@@ -98,7 +95,7 @@
 
                           //document.getElementById('main-content').innerHTML = startHTML;
                           document.getElementById('meny').innerHTML = '<span class="page-header"><a href="#" class="menu-link" id="newLessonGoal">Ny lektionsutvärdering</a>' + 
-                          ' <a href="#" class="menu-link" id="linkToStats">Statistik</a>' + 
+                          ' <a href="#" class="menu-link" id="linkToStats">Kolla statistik</a>' + 
                           ' <a href="#" class="menu-link" id="logOut">Logga ut</a> </span>'
                           idSpreadsheet = nameDetails.column('idSpreadsheet').data[0];
                           idKlass = nameDetails.column('idKlass').data[0];
