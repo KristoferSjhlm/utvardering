@@ -190,13 +190,13 @@
 
                         // on click show input form for new class
                         document.getElementById("nyklass").addEventListener("click", function( event ) {
-                            document.getElementById("klassinput").innerHTML = "<label>Ange klass <input id='klass' class='form-control' placeholder='Klass Skola (ämne)' name='klass' required></label>" 
+                            document.getElementById("klassinput").innerHTML = "<label>Klass (Grupp) Skola (Ämne)</label><input id='klass' class='form-control' placeholder='Ange ny klass (ex Klass 3B Stentägten (träslöjd)' name='klass' required>" 
                         }, false);
 
                         
                         // on click show input form for new lessongoal
                         document.getElementById("nyttmal").addEventListener("click", function( event ) {
-                            document.getElementById("malinput").innerHTML = "<label>Mål med lektionen <input id='mal' class='form-control' placeholder='Beskriv lektionsmålet' name='mal' required></label>" 
+                            document.getElementById("malinput").innerHTML = "<label>Lektionsmål som ska uppnås</label><input id='mal' class='form-control' placeholder='Beskriv det specifika målet med lektionen' name='mal' required>" 
                         }, false);
 
                         // add event triggers on the menu-links
