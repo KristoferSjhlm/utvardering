@@ -1,6 +1,22 @@
+	body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+	}
+
+	.navbar{
+		color: rgba(255,255,255,.8);
+    	background-color: #b84d45;
+    	background-image: url(../img/bg.png);
+	}
+
+	.navbar-brand{
+		font-family:"Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
+		font-size: 1.8em;
+	}
+
 	h1 {
 		padding-top: 0px;
-		font-size: 2em;
+		font-size: 2.5em;
+		font-family:"Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
 	}
 	h2 {
 		padding-top: 0px;
@@ -24,8 +40,9 @@
 
 	.menu-link{
 		font-size: 1.2em;
-		padding-top: 10px;
+		padding-top: 20px;
 		padding-right: 10px;
+		color: rgba(255,255,255,.8);
 	}
 	
 	.page-header {

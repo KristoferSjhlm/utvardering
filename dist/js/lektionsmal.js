@@ -3,7 +3,7 @@
 
         // global variabels
 
-          var startHTML = '<h1>Lektionsutvärdering</h1> \
+          var startHTML = '<h1>Ny lektionsutvärdering</h1> \
                           \
                           <form method="get" action="evaluation.html" target="_blank">\
                             <div class="input-group">\
@@ -95,9 +95,9 @@
                       _.when(ds.fetch()).then(function() {
 
                           // print menu links
-                          document.getElementById('meny').innerHTML = '<span class="page-header"><a href="#" class="menu-link" id="newLessonGoal">Ny lektionsutvärdering</a>' + 
-                          ' <a href="#" class="menu-link" id="linkToStats">Kolla statistik</a>' + 
-                          ' <a href="#" class="menu-link" id="logOut">Logga ut</a> </span>'
+                          document.getElementById('meny').innerHTML = '<li><a href="#" class="menu-link" id="newLessonGoal">Ny lektionsutvärdering</a></li>' + 
+                          '<li><a href="#" class="menu-link" id="linkToStats">Kolla statistik</a></li>' + 
+                          '<li><a href="#" class="menu-link" id="logOut">Logga ut</a> </span></li>'
                           
                           // get the data concerning this teacher from the spreadsheet lektionsmalTabell
                           idSpreadsheet = nameDetails.column('idSpreadsheet').data[0];
@@ -157,7 +157,7 @@
                             selectHTMLClass = selectHTMLClass + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
                         }
 
-                        document.getElementById('klassinput').innerHTML = "<strong>Klass: </strong> <select name='klass' id='klass'></select> <a href='#' id='nyklass'> Ange ny klass</a>"
+                        document.getElementById('klassinput').innerHTML = "<label>Klass (Grupp) Skola (Ämne)</label><br/> <select name='klass' id='klass'></select> <a href='#' id='nyklass'> Ange ny klass</a>"
                         document.getElementById('klass').innerHTML = selectHTMLClass;
 
 
@@ -184,7 +184,7 @@
                         }
 
                         //create the selectboc for the lessongoals
-                        document.getElementById('malinput').innerHTML = "<strong>Lektionsmål: </strong> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'> Ange nytt lektionsmål</a>"
+                        document.getElementById('malinput').innerHTML = "<label>Lektionsmål som ska uppnås</label><br/> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'> Ange nytt lektionsmål</a>"
                         document.getElementById('mal').innerHTML = selectLessongoalsHTML;
                         
 
