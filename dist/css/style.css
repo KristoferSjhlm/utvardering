@@ -1,16 +1,14 @@
-	body {
-    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-	}
-
 	.navbar{
 		color: rgba(255,255,255,.8);
     	background-color: #b84d45;
     	background-image: url(../img/bg.png);
 	}
 
+
 	.navbar-brand{
 		font-family:"Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
 		font-size: 1.8em;
+		color: white;
 	}
 
 	h1 {
@@ -38,17 +36,18 @@
 
 	}
 
+	.meny {
+		padding-top: 17px;
+	}
+
 	.menu-link{
 		font-size: 1.2em;
-		padding-top: 20px;
+		padding-top: 10px;
 		padding-right: 10px;
-		color: rgba(255,255,255,.8);
 	}
 	
 	.page-header {
-    	padding-bottom: 5px;
-    	margin: 40px 0 20px;
-    	border-bottom: 1px solid #eee;
+    	padding-top: 30px;
 	}
 
 	.buttons{

@@ -95,9 +95,9 @@
                       _.when(ds.fetch()).then(function() {
 
                           // print menu links
-                          document.getElementById('meny').innerHTML = '<li><a href="#" class="menu-link" id="newLessonGoal">Ny lektionsutvärdering</a></li>' + 
-                          '<li><a href="#" class="menu-link" id="linkToStats">Kolla statistik</a></li>' + 
-                          '<li><a href="#" class="menu-link" id="logOut">Logga ut</a> </span></li>'
+                          document.getElementById('meny').innerHTML = '<a href="#" style="color: white;" class="menu-link" id="newLessonGoal">Ny lektionsutvärdering</a>' + 
+                          ' <a href="#" style="color: white; hover: underline;" class="menu-link" id="linkToStats">Kolla statistik</a>' + 
+                          ' <a href="#" style="color: white; hover: underline;" class="menu-link" id="logOut">Logga ut</a>'
                           
                           // get the data concerning this teacher from the spreadsheet lektionsmalTabell
                           idSpreadsheet = nameDetails.column('idSpreadsheet').data[0];
@@ -157,7 +157,7 @@
                             selectHTMLClass = selectHTMLClass + '<option value="' + classes.column('Klass').data[j] + '">' + classes.column('Klass').data[j] + '</option>';
                         }
 
-                        document.getElementById('klassinput').innerHTML = "<label>Klass (Grupp) Skola (Ämne)</label><br/> <select name='klass' id='klass'></select> <a href='#' id='nyklass'> Ange ny klass</a>"
+                        document.getElementById('klassinput').innerHTML = "<strong>Klass (Grupp) Skola (Ämne) </strong><br/> <select name='klass' id='klass'></select> <a href='#' id='nyklass'> Ange ny klass</a>"
                         document.getElementById('klass').innerHTML = selectHTMLClass;
 
 
@@ -184,7 +184,7 @@
                         }
 
                         //create the selectboc for the lessongoals
-                        document.getElementById('malinput').innerHTML = "<label>Lektionsmål som ska uppnås</label><br/> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'> Ange nytt lektionsmål</a>"
+                        document.getElementById('malinput').innerHTML = "<strong>Lektionsmål som ska uppnås </strong><br/> <select name='mal' id='mal'></select> <a href='#' id='nyttmal'> Ange nytt lektionsmål</a>"
                         document.getElementById('mal').innerHTML = selectLessongoalsHTML;
                         
 
@@ -266,11 +266,11 @@
                 }  
 
                 function lessonViewGoal () {
-                      
-                      
+
                       document.getElementById('malTitle').innerHTML = "";
                       document.getElementById('bargraph').innerHTML = "";
                       document.getElementById('mean').innerHTML = "";
+                      counter = 0;
                       
 
                       var selectHTML = '<select name="select" id="selectLessonGoal"> <option value="Välj">Välj lektion</option>';
@@ -315,17 +315,18 @@
                           selectHTML = selectHTML + '<option value="' + counter + '">' + classNameLessons[counter].column('Lektionsmal').data[0] + '</option>';
                           counter = counter + 1;
                       }
-
-
+                      
                       //print out the selectbox on the page
                       document.getElementById('selectMalStats').innerHTML = selectHTML + "</select>";
 
                       // draw the Barchart and texts on the page for the chosen value
                       var drawBarchart = function(chosenValue){
-                          document.getElementById('malTitle').innerHTML = klassString + ": " + 
-                          classNameLessons[chosenValue].column('Lektionsmal').data[0] + " (medel " +
-                          classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1) + ")";
-                          barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
+                          if (chosenValue != "Välj") {
+                              document.getElementById('malTitle').innerHTML = klassString + ": " + 
+                              classNameLessons[chosenValue].column('Lektionsmal').data[0] + " (medel " +
+                              classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1) + ")";
+                              barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
+                          };
                       };
 
                       // put an eventlistener on the select-box
