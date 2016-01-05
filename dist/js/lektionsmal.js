@@ -266,11 +266,11 @@
                 }  
 
                 function lessonViewGoal () {
-                      
-                      
+
                       document.getElementById('malTitle').innerHTML = "";
                       document.getElementById('bargraph').innerHTML = "";
                       document.getElementById('mean').innerHTML = "";
+                      counter = 0;
                       
 
                       var selectHTML = '<select name="select" id="selectLessonGoal"> <option value="Välj">Välj lektion</option>';
@@ -315,18 +315,18 @@
                           selectHTML = selectHTML + '<option value="' + counter + '">' + classNameLessons[counter].column('Lektionsmal').data[0] + '</option>';
                           counter = counter + 1;
                       }
-
-
+                      
                       //print out the selectbox on the page
                       document.getElementById('selectMalStats').innerHTML = selectHTML + "</select>";
 
                       // draw the Barchart and texts on the page for the chosen value
                       var drawBarchart = function(chosenValue){
-                          alert(chosenValue);
-                          document.getElementById('malTitle').innerHTML = klassString + ": " + 
-                          classNameLessons[chosenValue].column('Lektionsmal').data[0] + " (medel " +
-                          classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1) + ")";
-                          barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
+                          if (chosenValue != "Välj") {
+                              document.getElementById('malTitle').innerHTML = klassString + ": " + 
+                              classNameLessons[chosenValue].column('Lektionsmal').data[0] + " (medel " +
+                              classNameLessons[chosenValue].mean("Maluppfyllnad").toFixed(1) + ")";
+                              barchart.draw(classNameLessons[chosenValue].countBy("Maluppfyllnad").toJSON());
+                          };
                       };
 
                       // put an eventlistener on the select-box
