@@ -1,6 +1,20 @@
+	.navbar{
+		color: rgba(255,255,255,.8);
+    	background-color: #b84d45;
+    	background-image: url(../img/bg.png);
+	}
+
+
+	.navbar-brand{
+		font-family:"Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
+		font-size: 1.8em;
+		color: white;
+	}
+
 	h1 {
 		padding-top: 0px;
-		font-size: 2em;
+		font-size: 2.5em;
+		font-family:"Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
 	}
 	h2 {
 		padding-top: 0px;
@@ -22,6 +36,10 @@
 
 	}
 
+	.meny {
+		padding-top: 17px;
+	}
+
 	.menu-link{
 		font-size: 1.2em;
 		padding-top: 10px;
@@ -29,9 +47,7 @@
 	}
 	
 	.page-header {
-    	padding-bottom: 5px;
-    	margin: 40px 0 20px;
-    	border-bottom: 1px solid #eee;
+    	padding-top: 30px;
 	}
 
 	.buttons{
